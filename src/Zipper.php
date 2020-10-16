@@ -2,10 +2,10 @@
 
 namespace Aerni\Zipper;
 
-use ZipArchive;
-use Statamic\Assets\Asset;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Statamic\Assets\Asset;
+use ZipArchive;
 
 class Zipper
 {
