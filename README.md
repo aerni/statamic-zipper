@@ -1,5 +1,8 @@
-# Zipper ![Statamic](https://flat.badgen.net/badge/Statamic/3.0+/FF269E)
-This addon provides a simple way to zip your assets on the fly.
+# Zipper
+
+![Statamic](https://flat.badgen.net/badge/Statamic/3.0+/FF269E)
+
+> This addon provides a simple way to zip your assets on the fly
 
 ## Installation
 Install the addon using Composer.
