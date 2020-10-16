@@ -2,7 +2,6 @@
 
 namespace Aerni\Zipper;
 
-use Aerni\Zipper\Zipper;
 use Statamic\Tags\Tags;
 
 class ZipperTags extends Tags

@@ -3,7 +3,6 @@
 namespace Aerni\Zipper\Tests;
 
 use Aerni\Zipper\ZipperTags;
-use Aerni\Zipper\Tests\TestCase;
 
 class ZipperTagsTest extends TestCase
 {
