@@ -1,0 +1,64 @@
+{
+    "name": "aerni/zipper",
+    "description": "Zip your assets  your files",
+    "keywords": [
+        "statamic",
+        "zip",
+        "zipper"
+    ],
+    "homepage": "https://github.com/aerni/statamic-zipper",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michael Aerni",
+            "email": "hello@michaelaerni.ch",
+            "homepage": "https://www.michaelaerni.ch",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "statamic/cms": "^3.0.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "nunomaduro/collision": "^5.0",
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aerni\\Zipper\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Aerni\\Zipper\\Tests\\": "tests"
+        },
+        "classmap": [
+            "tests/TestCase.php"
+        ]
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "statamic": {
+            "name": "Zipper",
+            "description": "Generate a zip of your files"
+        },
+        "laravel": {
+            "providers": [
+                "Aerni\\Zipper\\ServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
