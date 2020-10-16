@@ -13,7 +13,7 @@ class ZipperTags extends Tags
     {
         return (new Zipper())
             ->files($this->context->get($this->method)->value())
-            ->filename($this->params->get('filename'))
+            ->filename($this->params->get('filename') ?? time())
             ->save()
             ->url();
     }

@@ -18,7 +18,6 @@ class Zipper
     {
         $this->zip = new ZipArchive();
         $this->disk = Storage::disk(config('zipper.disk'));
-        $this->filename = time() . '.zip';
     }
 
     public function disk(string $disk): self
