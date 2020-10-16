@@ -7,7 +7,8 @@ return [
     | Filesystem Disk
     |--------------------------------------------------------------------------
     |
-    | Configure the disk you want to use for your zip files.
+    | Configure the filesystem disk you want to use for your zip files.
+    | This will determine the path and url of the zip.
     |
     */
 
