@@ -3,16 +3,35 @@
 namespace Aerni\Zipper;
 
 use Statamic\Facades\Asset;
+use Illuminate\Support\Facades\Storage;
 use STS\ZipStream\ZipStreamFacade as Zip;
-use STS\ZipStream\ZipStream;
 
 class Zipper
 {
-    public function create(string $filename, array $files): ZipStream
+    public function create(string $filename, array $files)
     {
         $filename = $this->filename($filename);
         $files = $this->files($files);
 
+        if ($this->saveToDisk()) {
+            return $this->save($filename, $files);
+        }
+
+        return $this->stream($filename, $files);
+    }
+
+    protected function save(string $filename, array $files)
+    {
+        $disk = Storage::disk(config('zipper.disk'));
+        $path = $disk->getAdapter()->getPathPrefix();
+
+        Zip::create($filename, $files)->saveTo($path);
+
+        return response()->download($path . '/' . $filename);
+    }
+
+    protected function stream(string $filename, array $files)
+    {
         return Zip::create($filename, $files);
     }
 
@@ -37,5 +56,14 @@ class Zipper
         }
 
         return substr($file->url(), 1);
+    }
+
+    protected function saveToDisk(): bool
+    {
+        if (! config('zipper.save')) {
+            return false;
+        }
+
+        return true;
     }
 }

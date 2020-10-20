@@ -4,13 +4,35 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Zipper Route
+    | Route
     |--------------------------------------------------------------------------
     |
-    | You may customize the route that handles creating your zip files.
+    | You may customize the route that handles creating the zip files.
     |
     */
 
     'route' => 'zipper',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Save To Disk
+    |--------------------------------------------------------------------------
+    |
+    | You may set this to 'true' to save the created zips to disk.
+    |
+    */
+
+    'save' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Filesystem Disk
+    |--------------------------------------------------------------------------
+    |
+    | Choose the disk you want to use when saving a zip.
+    |
+    */
+
+    'disk' => 'public',
 
 ];

@@ -5,11 +5,10 @@ namespace Aerni\Zipper;
 use Illuminate\Http\Request;
 use Facades\Aerni\Zipper\Zipper;
 use Statamic\Http\Controllers\Controller;
-use STS\ZipStream\ZipStream;
 
 class ZipperController extends Controller
 {
-    public function create(Request $request): ZipStream
+    public function create(Request $request)
     {
         if (! $this->isValid($request)) {
             abort(403);
