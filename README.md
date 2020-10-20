@@ -11,6 +11,7 @@ Install the addon using Composer.
 composer require aerni/zipper
 ```
 
+## Configuration
 You may also publish the config of the addon.
 
 ```bash
@@ -24,11 +25,32 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Route
+    |--------------------------------------------------------------------------
+    |
+    | Define the route that handles creating the zip files.
+    |
+    */
+
+    'route' => 'zipper',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Save To Disk
+    |--------------------------------------------------------------------------
+    |
+    | Set this to 'true' to save the created zips to disk.
+    |
+    */
+
+    'save' => false,
+
+    /*
+    |--------------------------------------------------------------------------
     | Filesystem Disk
     |--------------------------------------------------------------------------
     |
-    | Configure the filesystem disk you want to use for your zip files.
-    | This will determine the path and url of the zip.
+    | Choose the disk you want to use when saving a zip.
     |
     */
 
@@ -39,7 +61,7 @@ return [
 
 ## Basic Usage
 
-To create a zip of your assets, you have to call the tag followed by the variable containing your assets. The tag will return the URL to the generated zip.
+To create a zip of your assets, you have to call the `zip` tag followed by the `variable` containing your assets.
 
 Somewhere in your content files:
 
@@ -55,8 +77,12 @@ Somehwere in your views:
 {{ zip:images }}
 ```
 
-By default, the filename of the zip will be the current timestamp. You may customize the filename to your liking. I highly suggest you do so. If you don't, a new zip will be created on every request.
+The tag returns the URL to the route that handles creating the zip. The zip will be streamed and won't be saved to disk. You can change this behaviour in the config.
 
-```template
+### Filename
+
+By default, the filename of the zip will be the current timestamp. You can also customize the filename. The example below binds the filename of the zip to the title of the current page.
+
+```html
 {{ zip:images :filename='title' }}
 ```

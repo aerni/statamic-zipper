@@ -7,7 +7,7 @@ return [
     | Route
     |--------------------------------------------------------------------------
     |
-    | You may customize the route that handles creating the zip files.
+    | Define the route that handles creating the zip files.
     |
     */
 
@@ -18,7 +18,7 @@ return [
     | Save To Disk
     |--------------------------------------------------------------------------
     |
-    | You may set this to 'true' to save the created zips to disk.
+    | Set this to 'true' to save the created zips to disk.
     |
     */
 
