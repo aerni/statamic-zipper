@@ -2,65 +2,40 @@
 
 namespace Aerni\Zipper;
 
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Storage;
-use Statamic\Assets\Asset;
-use ZipArchive;
+use Statamic\Facades\Asset;
+use STS\ZipStream\ZipStreamFacade as Zip;
+use STS\ZipStream\ZipStream;
 
 class Zipper
 {
-    protected $zip;
-    protected $disk;
-    protected $files;
-    protected $filename;
-
-    public function __construct()
+    public function create(string $filename, array $files): ZipStream
     {
-        $this->zip = new ZipArchive();
-        $this->disk = Storage::disk(config('zipper.disk'));
+        $filename = $this->filename($filename);
+        $files = $this->files($files);
+
+        return Zip::create($filename, $files);
     }
 
-    public function disk(string $disk): self
+    protected function filename(string $filename): string
     {
-        $this->disk = Storage::disk($disk);
-
-        return $this;
+        return $filename . '.zip';
     }
 
-    public function files(Collection $files): self
+    protected function files(array $files): array
     {
-        $this->files = $files;
-
-        return $this;
+        return collect($files)->map(function ($file) {
+            return $this->url($file);
+        })->filter()->all();
     }
 
-    public function filename(string $filename): self
+    protected function url($file): ?string
     {
-        $this->filename = $filename . '.zip';
+        $file = Asset::findById($file);
 
-        return $this;
-    }
+        if (is_null($file)) {
+            return null;
+        }
 
-    public function save(): self
-    {
-        $this->zip->open($this->path(), ZipArchive::CREATE);
-
-        $this->files->each(function (Asset $file) {
-            $this->zip->addFile($file->resolvedPath(), $file->basename());
-        });
-
-        $this->zip->close();
-
-        return $this;
-    }
-
-    public function url(): string
-    {
-        return $this->disk->url($this->filename);
-    }
-
-    public function path(): string
-    {
-        return $this->disk->path($this->filename);
+        return substr($file->url(), 1);
     }
 }

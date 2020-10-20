@@ -18,7 +18,8 @@
     ],
     "require": {
         "php": "^7.4",
-        "statamic/cms": "^3.0.0"
+        "statamic/cms": "^3.0.0",
+        "stechstudio/laravel-zipstream": "^2.6"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.16",

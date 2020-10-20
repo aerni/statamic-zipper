@@ -4,14 +4,13 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Filesystem Disk
+    | Zipper Route
     |--------------------------------------------------------------------------
     |
-    | Configure the filesystem disk you want to use for your zip files.
-    | This will determine the path and url of the zip.
+    | You may customize the route that handles creating your zip files.
     |
     */
 
-    'disk' => 'public',
+    'route' => 'zipper',
 
 ];
