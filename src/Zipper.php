@@ -2,8 +2,8 @@
 
 namespace Aerni\Zipper;
 
-use Statamic\Facades\Asset;
 use Illuminate\Support\Facades\Storage;
+use Statamic\Facades\Asset;
 use STS\ZipStream\ZipStreamFacade as Zip;
 
 class Zipper

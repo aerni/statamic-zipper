@@ -16,7 +16,7 @@ class ZipperTags extends Tags
 
         return route('zipper', [
             'filename' => $this->filename(),
-            'files' => $this->files()
+            'files' => $this->files(),
         ]);
     }
 

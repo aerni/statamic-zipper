@@ -2,8 +2,8 @@
 
 namespace Aerni\Zipper;
 
-use Illuminate\Http\Request;
 use Facades\Aerni\Zipper\Zipper;
+use Illuminate\Http\Request;
 use Statamic\Http\Controllers\Controller;
 
 class ZipperController extends Controller
