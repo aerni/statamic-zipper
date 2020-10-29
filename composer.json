@@ -1,6 +1,6 @@
 {
     "name": "aerni/zipper",
-    "description": "Zip your assets  your files",
+    "description": "Zip your Statamic assets on the fly",
     "keywords": [
         "statamic",
         "zip",
