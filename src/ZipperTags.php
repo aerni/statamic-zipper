@@ -14,7 +14,7 @@ class ZipperTags extends Tags
             return null;
         }
 
-        return route('zipper', [
+        return action([ZipperController::class, 'create'], [
             'filename' => $this->filename(),
             'files' => $this->files(),
         ]);
