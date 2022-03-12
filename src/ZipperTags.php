@@ -33,7 +33,14 @@ class ZipperTags extends Tags
             return null;
         }
 
-        return $files->value()->map(function ($file) {
+        $value = $files->value();
+
+        // Handle asset fields with `max_items: 1`
+        if ($value instanceof \Statamic\Assets\Asset) {
+            return [$value->id()];
+        }
+
+        return $value->get()->map(function ($file) {
             return $file->id();
         })->all();
     }
