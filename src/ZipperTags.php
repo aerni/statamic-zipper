@@ -40,7 +40,7 @@ class ZipperTags extends Tags
             return [$value->id()];
         }
 
-        return $value->get()->map(function ($file) {
+        return $value->map(function ($file) {
             return $file->id();
         })->all();
     }
