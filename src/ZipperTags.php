@@ -35,12 +35,16 @@ class ZipperTags extends Tags
 
         $value = $files->value();
 
-        // Handle asset fields with `max_items: 1`
+        // Handle asset fields with `max_files: 1`
         if ($value instanceof \Statamic\Assets\Asset) {
             return [$value->id()];
         }
 
-        return $value->get()->map(function ($file) {
+        if ($value instanceof \Statamic\Assets\OrderedQueryBuilder) {
+            $value = $value->get();
+        }
+
+        return $value->map(function ($file) {
             return $file->id();
         })->all();
     }
