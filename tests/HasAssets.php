@@ -2,12 +2,9 @@
 
 namespace Aerni\Zipper\Tests;
 
-use Statamic\Facades\Path;
-use Statamic\Facades\Stache;
 use Illuminate\Http\UploadedFile;
-use Statamic\Assets\AssetContainer;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
+use Statamic\Assets\AssetContainer;
 
 trait HasAssets
 {

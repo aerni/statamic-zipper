@@ -2,12 +2,10 @@
 
 namespace Aerni\Zipper\Tests;
 
+use Aerni\Zipper\ZipperTags;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
-use Aerni\Zipper\ZipperTags;
-use Aerni\Zipper\Tests\HasAssets;
 use Statamic\Fieldtypes\Assets\Assets;
-use Aerni\Zipper\Tests\PreventSavingStacheItemsToDisk;
 
 class ZipperTagsTest extends TestCase
 {
@@ -32,7 +30,7 @@ class ZipperTagsTest extends TestCase
 
         $fieldtype = (new Assets)->setField(new Field('assets', [
             'type' => 'assets',
-            'max_files' => 1
+            'max_files' => 1,
         ]));
 
         $value = new Value($file, 'assets', $fieldtype);
