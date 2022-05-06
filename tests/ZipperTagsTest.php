@@ -69,4 +69,22 @@ class ZipperTagsTest extends TestCase
             $this->assertStringContainsString($file, $url);
         });
     }
+
+    /** @test */
+    public function canHandleMultipleImages()
+    {
+        $files = $this->assetContainer->files();
+
+        $this->tag
+            ->setContext(['images' => $files])
+            ->setParameters(['filename' => 'zip']);
+
+        $this->tag->method = 'images';
+
+        $url = $this->tag->wildcard();
+
+        collect($files)->each(function ($file) use ($url) {
+            $this->assertStringContainsString($file, $url);
+        });
+    }
 }

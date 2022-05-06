@@ -33,7 +33,7 @@ class ZipperTags extends Tags
             return null;
         }
 
-        $value = $files->value();
+        $value = ($files instanceof \Statamic\Fields\Value) ? $files->value() : collect($files);
 
         // Handle asset fields with `max_files: 1`
         if ($value instanceof \Statamic\Assets\Asset) {
@@ -45,22 +45,37 @@ class ZipperTags extends Tags
         }
 
         return $value->map(function ($file) {
-            return $file->id();
-        })->all();
+            if (is_string($file)) {
+                return $file;
+            }
+
+            if ($file instanceof \Statamic\Assets\Asset) {
+                return $file->id();
+            }
+        })->filter()->all();
     }
 
     protected function hasFilesToZip($files): bool
     {
-        if (is_null($files->raw())) {
+        if (is_null($files)) {
             return false;
         }
 
-        if (! $files instanceof \Statamic\Fields\Value) {
-            return false;
+
+        if ($files instanceof \Statamic\Fields\Value) {
+            if (is_null($files->raw())) {
+                return false;
+            }
+
+            if (! $files->fieldtype() instanceof \Statamic\Fieldtypes\Assets\Assets) {
+                return false;
+            }
         }
 
-        if (! $files->fieldtype() instanceof \Statamic\Fieldtypes\Assets\Assets) {
-            return false;
+        if (is_array($files)) {
+            return collect($files)->map(function ($file) {
+                return $this->hasFilesToZip($file) ?? null;
+            })->filter()->isNotEmpty();
         }
 
         return true;
