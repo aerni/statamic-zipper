@@ -8,6 +8,14 @@ use STS\ZipStream\ZipStreamFacade as Zip;
 
 class Zipper
 {
+    public function route(string $filename, array $files): string
+    {
+        return route('statamic.zipper.create', [
+            'filename' => $filename,
+            'files' => $files,
+        ]);
+    }
+
     public function create(string $filename, array $files)
     {
         $filename = $this->filename($filename);
@@ -27,7 +35,7 @@ class Zipper
 
         Zip::create($filename, $files)->saveTo($path);
 
-        return response()->download($path . '/' . $filename);
+        return response()->download($path.'/'.$filename);
     }
 
     protected function stream(string $filename, array $files)
@@ -37,7 +45,7 @@ class Zipper
 
     protected function filename(string $filename): string
     {
-        return $filename . '.zip';
+        return $filename.'.zip';
     }
 
     protected function files(array $files): array

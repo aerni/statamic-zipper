@@ -2,6 +2,7 @@
 
 namespace Aerni\Zipper;
 
+use Facades\Aerni\Zipper\Zipper;
 use Statamic\Tags\Tags;
 
 class ZipperTags extends Tags
@@ -14,10 +15,7 @@ class ZipperTags extends Tags
             return null;
         }
 
-        return action([ZipperController::class, 'create'], [
-            'filename' => $this->filename(),
-            'files' => $this->files(),
-        ]);
+        return Zipper::route($this->filename(), $this->files());
     }
 
     protected function filename(): string
