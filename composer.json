@@ -18,7 +18,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "statamic/cms": "~3.3.11",
+        "statamic/cms": "~3.3.12",
         "stechstudio/laravel-zipstream": "^4.5"
     },
     "require-dev": {
