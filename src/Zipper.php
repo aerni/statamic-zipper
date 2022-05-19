@@ -3,75 +3,50 @@
 namespace Aerni\Zipper;
 
 use Illuminate\Support\Facades\Storage;
-use Statamic\Facades\Asset;
+use Statamic\Assets\AssetCollection;
+use Statamic\Facades\File;
 use STS\ZipStream\ZipStreamFacade as Zip;
 
 class Zipper
 {
-    public function route(string $filename, array $files): string
+    public function route(AssetCollection $files, string $filename = null): string
     {
         return route('statamic.zipper.create', [
-            'filename' => $filename,
-            'files' => $files,
+            'files' => $this->fileUrls($files),
+            'filename' => $this->filename($filename),
         ]);
     }
 
-    public function create(string $filename, array $files)
+    public function create(array $files, string $filename)
     {
-        $filename = $this->filename($filename);
-        $files = $this->files($files);
+        $zip = Zip::create($filename, $files);
 
-        if ($this->saveToDisk()) {
-            return $this->save($filename, $files);
-        }
-
-        return $this->stream($filename, $files);
-    }
-
-    protected function save(string $filename, array $files)
-    {
-        $disk = Storage::disk(config('zipper.disk'));
-        $path = $disk->getAdapter()->getPathPrefix();
-
-        Zip::create($filename, $files)->saveTo($path);
-
-        return response()->download($path.'/'.$filename);
-    }
-
-    protected function stream(string $filename, array $files)
-    {
-        return Zip::create($filename, $files);
-    }
-
-    protected function filename(string $filename): string
-    {
-        return $filename.'.zip';
-    }
-
-    protected function files(array $files): array
-    {
-        return collect($files)->map(function ($file) {
-            return $this->url($file);
-        })->filter()->all();
-    }
-
-    protected function url($file): ?string
-    {
-        $file = Asset::findById($file);
-
-        if (is_null($file)) {
-            return null;
-        }
-
-        return substr($file->url(), 1);
-    }
-
-    protected function saveToDisk(): bool
-    {
         if (! config('zipper.save')) {
-            return false;
+            return $zip;
         }
 
-        return true;
+        $path = Storage::disk(config('zipper.disk'))
+            ->getAdapter()
+            ->getPathPrefix();
+
+        $cachepath = "{$path}{$zip->getFingerprint()}.zip";
+
+        return File::exists($cachepath)
+            ? response()->download($cachepath, $filename)
+            : $zip->cache($cachepath);
+    }
+
+    protected function fileUrls(AssetCollection $files): array
+    {
+        return $files->map(function ($file) {
+            return substr($file->url(), 1);
+        })->all();
+    }
+
+    protected function filename(string $filename = null): string
+    {
+        return $filename
+            ? "{$filename}.zip"
+            : time().'.zip';
     }
 }

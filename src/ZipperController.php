@@ -11,10 +11,10 @@ class ZipperController extends Controller
     public function create(Request $request)
     {
         $data = $request->validate([
-            'filename' => 'required',
             'files' => 'required',
+            'filename' => 'required',
         ]);
 
-        return Zipper::create($data['filename'], $data['files']);
+        return Zipper::create($data['files'], $data['filename']);
     }
 }

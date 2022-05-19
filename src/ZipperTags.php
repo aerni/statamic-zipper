@@ -3,6 +3,7 @@
 namespace Aerni\Zipper;
 
 use Facades\Aerni\Zipper\Zipper;
+use Statamic\Assets\AssetCollection;
 use Statamic\Tags\Tags;
 
 class ZipperTags extends Tags
@@ -11,65 +12,31 @@ class ZipperTags extends Tags
 
     public function wildcard(): ?string
     {
-        if (! $this->canCreateZip()) {
-            return null;
-        }
-
-        return Zipper::route($this->filename(), $this->files());
+        return Zipper::route($this->files(), $this->filename());
     }
 
-    protected function filename(): string
-    {
-        return $this->params->get('filename') ?? time();
-    }
-
-    protected function files(): ?array
+    protected function files(): AssetCollection
     {
         $files = $this->context->get($this->method);
 
-        if (! $this->hasFilesToZip($files)) {
-            return null;
-        }
+        $value = optional($files)->value();
 
-        $value = $files->value();
-
-        // Handle asset fields with `max_files: 1`
+        // Handle asset fields with `max_files: 1`.
         if ($value instanceof \Statamic\Assets\Asset) {
-            return [$value->id()];
+            return new AssetCollection([$value]);
         }
 
+        // Handle asset fields without `max_files`.
         if ($value instanceof \Statamic\Assets\OrderedQueryBuilder) {
-            $value = $value->get();
+            return $value->get();
         }
 
-        return $value->map(function ($file) {
-            return $file->id();
-        })->all();
+        // Simply return an empty collection by default.
+        return new AssetCollection();
     }
 
-    protected function hasFilesToZip($files): bool
+    protected function filename(): ?string
     {
-        if (is_null($files->raw())) {
-            return false;
-        }
-
-        if (! $files instanceof \Statamic\Fields\Value) {
-            return false;
-        }
-
-        if (! $files->fieldtype() instanceof \Statamic\Fieldtypes\Assets\Assets) {
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function canCreateZip(): bool
-    {
-        if (is_null($this->files())) {
-            return false;
-        }
-
-        return true;
+        return $this->params->get('filename');
     }
 }
