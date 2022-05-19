@@ -1,24 +1,22 @@
+![Statamic](https://flat.badgen.net/badge/Statamic/3.3.12+/FF269E) ![Packagist version](https://flat.badgen.net/packagist/v/aerni/statamic-zipper/latest) ![Packagist Total Downloads](https://flat.badgen.net/packagist/dt/aerni/statamic-zipper)
+
 # Zipper
-
-![Statamic](https://flat.badgen.net/badge/Statamic/3.0+/FF269E)
-
-> This addon provides a simple way to zip your assets on the fly
+This addon provides a simple way to zip your Statamic assets on the fly.
 
 ## Installation
-Install the addon using Composer.
+Install the addon using Composer:
 
 ```bash
 composer require aerni/zipper
 ```
 
-## Configuration
-You may also publish the config of the addon.
+Publish the config of the package (optional):
 
 ```bash
 php please vendor:publish --tag=zipper-config
 ```
 
-The following config will be published to `config/zipper.php`.
+The following config will be published to `config/zipper.php`:
 
 ```php
 return [
@@ -28,7 +26,8 @@ return [
     | Save To Disk
     |--------------------------------------------------------------------------
     |
-    | Set this to 'true' to save the created zips to disk.
+    | Set this to 'true' to save the zips to disk.
+    | The saved file will be used the next time a user requests a zip with the same payload.
     |
     */
 
@@ -66,11 +65,11 @@ Somehwere in your views:
 {{ zip:images }}
 ```
 
-The tag returns the URL to the route that handles creating the zip. The zip will be streamed and won't be saved to disk. You can change this behaviour in the config.
+The tag returns the URL to the route that handles creating the zip. The zip will be streamed and won't be saved to disk. You may opt in to save the file to disk to be used on subsequent requests.
 
 ### Filename
 
-By default, the filename of the zip will be the current timestamp. You can also customize the filename. The example below binds the filename of the zip to the title of the current page.
+By default, the filename of the downloaded zip will be the current timestamp. You can also customize the filename. The example below binds the filename of the zip to the title of the current page.
 
 ```html
 {{ zip:images :filename='title' }}
