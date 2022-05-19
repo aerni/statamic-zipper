@@ -2,7 +2,6 @@
 
 namespace Aerni\Zipper;
 
-use Facades\Aerni\Zipper\Zipper;
 use Illuminate\Http\Request;
 use Statamic\Http\Controllers\Controller;
 

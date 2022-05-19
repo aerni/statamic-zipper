@@ -9,15 +9,15 @@ use STS\ZipStream\ZipStreamFacade as Zip;
 
 class Zipper
 {
-    public function route(AssetCollection $files, string $filename = null): string
+    public static function route(AssetCollection $files, string $filename = null): string
     {
         return route('statamic.zipper.create', [
-            'files' => $this->fileUrls($files),
-            'filename' => $this->filename($filename),
+            'files' => self::fileUrls($files),
+            'filename' => self::filename($filename),
         ]);
     }
 
-    public function create(array $files, string $filename)
+    public static function create(array $files, string $filename)
     {
         $zip = Zip::create($filename, $files);
 
@@ -36,14 +36,14 @@ class Zipper
             : $zip->cache($cachepath);
     }
 
-    protected function fileUrls(AssetCollection $files): array
+    protected static function fileUrls(AssetCollection $files): array
     {
         return $files->map(function ($file) {
             return substr($file->url(), 1);
         })->all();
     }
 
-    protected function filename(string $filename = null): string
+    protected static function filename(string $filename = null): string
     {
         return $filename
             ? "{$filename}.zip"

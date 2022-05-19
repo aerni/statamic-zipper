@@ -2,7 +2,6 @@
 
 namespace Aerni\Zipper;
 
-use Facades\Aerni\Zipper\Zipper;
 use Statamic\Assets\AssetCollection;
 use Statamic\Tags\Tags;
 
