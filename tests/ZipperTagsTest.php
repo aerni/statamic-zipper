@@ -49,7 +49,7 @@ class ZipperTagsTest extends TestCase
     /** @test */
     public function can_handle_multiple_assets()
     {
-        $files = $this->assetContainer->files();
+        $files = $this->assetContainer->files()->all();
 
         $fieldtype = (new Assets)->setField(new Field('assets', [
             'type' => 'assets',
