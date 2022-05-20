@@ -65,9 +65,7 @@ Somehwere in your views:
 {{ zip:images }}
 ```
 
-### Filename
-
-By default, the filename of the zip will be the current timestamp. You may customize the filename using the `filename` parameter. The example below binds the filename to the title of the current page.
+You may optionally pass a filename using the `filename` parameter. The example below binds the name of the zip to the title of the current page. The filename defaults to the current timestamp.
 
 ```html
 {{ zip:images :filename='title' }}
@@ -75,15 +73,15 @@ By default, the filename of the zip will be the current timestamp. You may custo
 
 ## Advanced Usage
 
-This addon also exposes two methods that let you create a route or a zip programmatically without the need of the zip tag in your view.
+This addon also exposes two methods that let you get the route or create a zip programmatically.
 
-The `route` method returns the route that handles creating the zip. The output will be the same as if you used the `zip` tag in your views.
+The `route` method returns the route that handles creating the zip. This is the same as using the `zip` tag in your views.
 
 ```php
 \Aerni\Zipper\Zipper::route($files, $filename);
 ```
 
-The `create` method creates and returns the zip directly.
+The `create` method creates and returns the zip directly:
 
 ```php
 \Aerni\Zipper\Zipper::create($files, $filename);
@@ -106,7 +104,7 @@ $files = [
     '/path/to/file_3.jpg',
 ]
 
-// An array of associative arrays with a `url` key
+// An array of associative arrays with a 'url' key
 $files = [
     [
         'url' => '/path/to/file.jpg',
