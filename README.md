@@ -49,7 +49,7 @@ return [
 
 ## Basic Usage
 
-To create a zip of your assets, you have to call the `zip` tag followed by the `variable` containing your assets.
+To create a zip of your assets, you have to call the `zip` tag followed by the `variable` containing your assets. The tag returns the URL to the route that handles creating the zip. The zip will be streamed without being saved to disk. You may opt in to save the file to disk to be used on subsequent requests.
 
 Somewhere in your content files:
 
@@ -65,12 +65,57 @@ Somehwere in your views:
 {{ zip:images }}
 ```
 
-The tag returns the URL to the route that handles creating the zip. The zip will be streamed and won't be saved to disk. You may opt in to save the file to disk to be used on subsequent requests.
-
 ### Filename
 
-By default, the filename of the downloaded zip will be the current timestamp. You can also customize the filename. The example below binds the filename of the zip to the title of the current page.
+By default, the filename of the zip will be the current timestamp. You may customize the filename using the `filename` parameter. The example below binds the filename to the title of the current page.
 
 ```html
 {{ zip:images :filename='title' }}
+```
+
+## Advanced Usage
+
+This addon also exposes two methods that let you create a route or a zip programmatically without the need of the zip tag in your view.
+
+The `route` method returns the route that handles creating the zip. The output will be the same as if you used the `zip` tag in your views.
+
+```php
+\Aerni\Zipper\Zipper::route($files, $filename);
+```
+
+The `create` method creates and returns the zip directly.
+
+```php
+\Aerni\Zipper\Zipper::create($files, $filename);
+```
+
+The `$files` can be either one of the following:
+
+```php
+// An array of Statamic assets
+$files = [
+    Statamic\Assets\Asset,
+    Statamic\Assets\Asset,
+    Statamic\Assets\Asset,
+]
+
+// An array of URLs
+$files = [
+    '/path/to/file.jpg',
+    '/path/to/file_2.jpg',
+    '/path/to/file_3.jpg',
+]
+
+// An array of associative arrays with a `url` key
+$files = [
+    [
+        'url' => '/path/to/file.jpg',
+    ],
+    [
+        'url' => '/path/to/file_2.jpg',
+    ],
+    [
+        'url' => '/path/to/file_3.jpg',
+    ],
+]
 ```
