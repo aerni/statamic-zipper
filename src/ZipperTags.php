@@ -2,36 +2,28 @@
 
 namespace Aerni\Zipper;
 
-use Statamic\Assets\AssetCollection;
+use Statamic\Assets\OrderedQueryBuilder;
+use Statamic\Contracts\Assets\Asset;
 use Statamic\Tags\Tags;
 
 class ZipperTags extends Tags
 {
     protected static $handle = 'zip';
 
-    public function wildcard(): ?string
+    public function wildcard(): string
     {
         return Zipper::route($this->files(), $this->filename());
     }
 
-    protected function files(): AssetCollection
+    protected function files(): array
     {
-        $files = $this->context->get($this->method);
+        $value = $this->context->get($this->method)?->value();
 
-        $value = optional($files)->value();
-
-        // Handle asset fields with `max_files: 1`.
-        if ($value instanceof \Statamic\Assets\Asset) {
-            return new AssetCollection([$value]);
-        }
-
-        // Handle asset fields without `max_files`.
-        if ($value instanceof \Statamic\Assets\OrderedQueryBuilder) {
-            return $value->get();
-        }
-
-        // Simply return an empty collection by default.
-        return new AssetCollection();
+        return match (true) {
+            ($value instanceof Asset) => [$value], // Handle asset fields with `max_files: 1`.
+            ($value instanceof OrderedQueryBuilder) => $value->get()->all(), // Handle asset fields without `max_files`.
+            default => [],
+        };
     }
 
     protected function filename(): ?string
