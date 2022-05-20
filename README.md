@@ -75,7 +75,7 @@ You may optionally pass a filename using the `filename` parameter. The example b
 
 This addon also exposes two methods that let you get the route or create a zip programmatically.
 
-The `route` method returns the route that handles creating the zip. This is the same as using the `zip` tag in your views.
+The `route` method returns the route that handles creating the zip. This is the same as using the `zip` tag in your views:
 
 ```php
 \Aerni\Zipper\Zipper::route($files, $filename);
