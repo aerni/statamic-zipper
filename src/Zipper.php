@@ -39,7 +39,7 @@ class Zipper
     {
         return collect($files)
             ->map(fn ($file) => match (true) {
-                ($file instanceof Asset) => substr($file->url(), 1),
+                ($file instanceof Asset) => $file->absoluteUrl(),
                 (is_array($file)) => Arr::get($file, 'url'),
                 default => $file,
             })
