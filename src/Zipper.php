@@ -5,6 +5,7 @@ namespace Aerni\Zipper;
 use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Statamic\Contracts\Assets\Asset;
@@ -23,7 +24,13 @@ class Zipper
 
     public static function create(Collection|array $files, ?string $filename = null)
     {
-        $files = collect(self::files($files))->filter(fn ($file) => self::fileExists($file));
+        $fingerprint = md5(collect($files)->implode(''));
+
+        $files = Cache::remember($fingerprint, 3600, function () use ($files) {
+            return collect(self::files($files))
+                ->filter(fn ($file) => self::fileExists($file))
+                ->all();
+        });
 
         $zip = Zip::create(self::filename($filename), $files);
 
@@ -32,7 +39,7 @@ class Zipper
         }
 
         $path = Storage::disk(config('zipper.disk'))->getAdapter()->getPathPrefix();
-        $cachepath = self::filename($path.$zip->getFingerprint());
+        $cachepath = self::filename($path.$fingerprint);
 
         return File::exists($cachepath)
             ? response()->download($cachepath, $zip->getName())
