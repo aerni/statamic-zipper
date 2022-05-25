@@ -99,21 +99,23 @@ $files = [
 
 // An array of URLs
 $files = [
-    '/path/to/file.jpg',
-    '/path/to/file_2.jpg',
-    '/path/to/file_3.jpg',
+    'https://site.com/path/to/file.jpg',
+    'https://site.com/path/to/file_2.jpg',
+    'https://site.com/path/to/file_3.jpg',
 ]
 
-// An array of associative arrays with a 'url' key
+// An array of associative arrays containing a 'url' key-value pair
 $files = [
     [
-        'url' => '/path/to/file.jpg',
+        'url' => 'https://site.com/path/to/file.jpg',
     ],
     [
-        'url' => '/path/to/file_2.jpg',
+        'url' => 'https://site.com/path/to/file_2.jpg',
     ],
     [
-        'url' => '/path/to/file_3.jpg',
+        'url' => 'https://site.com/path/to/file_3.jpg',
     ],
 ]
 ```
+
+>Note: Make sure the URLs are absolute. Any other values will be removed.
