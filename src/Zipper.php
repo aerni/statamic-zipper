@@ -2,6 +2,7 @@
 
 namespace Aerni\Zipper;
 
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
@@ -22,7 +23,9 @@ class Zipper
 
     public static function create(Collection|array $files, ?string $filename = null)
     {
-        $zip = Zip::create(self::filename($filename), self::files($files));
+        $files = collect(self::files($files))->filter(fn ($file) => self::fileExists($file));
+
+        $zip = Zip::create(self::filename($filename), $files);
 
         if (! config('zipper.save')) {
             return $zip;
@@ -44,12 +47,21 @@ class Zipper
                 (is_array($file)) => Arr::get($file, 'url'),
                 default => $file,
             })
-            ->filter(fn ($file) => Http::get($file)->successful())
+            ->filter(fn ($file) => filter_var($file, FILTER_VALIDATE_URL))
             ->all();
     }
 
     protected static function filename(?string $filename): string
     {
         return $filename ? "{$filename}.zip" : time().'.zip';
+    }
+
+    protected static function fileExists(string $file): bool
+    {
+        try {
+            return Http::get($file)->successful();
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }
