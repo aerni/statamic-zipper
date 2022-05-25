@@ -3,6 +3,7 @@
 namespace Aerni\Zipper\Tests;
 
 use Aerni\Zipper\ZipperTags;
+use Illuminate\Support\Facades\Http;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
 use Statamic\Fieldtypes\Assets\Assets;
@@ -21,6 +22,8 @@ class ZipperTagsTest extends TestCase
         $this->makeAssets();
 
         $this->tag = app(ZipperTags::class);
+
+        Http::fake();
     }
 
     /** @test */

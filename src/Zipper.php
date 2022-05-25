@@ -4,6 +4,7 @@ namespace Aerni\Zipper;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Facades\File;
@@ -43,7 +44,7 @@ class Zipper
                 (is_array($file)) => Arr::get($file, 'url'),
                 default => $file,
             })
-            ->filter(fn ($file) => File::exists(public_path($file)))
+            ->filter(fn ($file) => Http::get($file)->successful())
             ->all();
     }
 
