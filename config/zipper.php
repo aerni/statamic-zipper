@@ -8,6 +8,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Set this to 'true' to save the created zips to disk.
+    | The saved file will be used the next time a user requests a zip with the same payload.
     |
     */
 
