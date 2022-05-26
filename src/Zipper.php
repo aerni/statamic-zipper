@@ -23,7 +23,7 @@ class Zipper
 
     public static function create(Collection|array $files, ?string $filename = null)
     {
-        $files = collect(self::files($files))->filter(fn ($file) => self::fileExists($file));
+        $files = collect(self::files($files))->filter(fn ($file) => self::fileExists($file))->all();
 
         $zip = Zip::create(self::filename($filename), $files);
 
