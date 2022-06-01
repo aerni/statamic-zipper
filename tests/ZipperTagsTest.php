@@ -3,7 +3,9 @@
 namespace Aerni\Zipper\Tests;
 
 use Aerni\Zipper\ZipperTags;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
 use Statamic\Fieldtypes\Assets\Assets;
@@ -46,7 +48,10 @@ class ZipperTagsTest extends TestCase
 
         $url = $this->tag->wildcard();
 
-        $this->assertStringContainsString($file, $url);
+        $files = Str::afterLast($url, '/');
+        $file = json_decode(Crypt::decryptString($files))[0];
+
+        $this->assertSame($value->value()->resolvedPath(), $file);
     }
 
     /** @test */
@@ -68,8 +73,11 @@ class ZipperTagsTest extends TestCase
 
         $url = $this->tag->wildcard();
 
-        collect($files)->each(function ($file) use ($url) {
-            $this->assertStringContainsString($file, $url);
+        $files = Str::afterLast($url, '/');
+        $files = json_decode(Crypt::decryptString($files));
+
+        $value->value()->get()->each(function ($file) use ($files) {
+            $this->assertContains($file->resolvedPath(), $files);
         });
     }
 }
