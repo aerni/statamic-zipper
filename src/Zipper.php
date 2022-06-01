@@ -3,10 +3,11 @@
 namespace Aerni\Zipper;
 
 use Exception;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Facades\File;
 use STS\ZipStream\ZipStreamFacade as Zip;
@@ -16,16 +17,20 @@ class Zipper
     public static function route(Collection|array $files, ?string $filename = null): string
     {
         return route('statamic.zipper.create', [
-            'files' => self::files($files),
+            'files' => Crypt::encryptString(self::files($files)),
             'filename' => $filename,
         ]);
     }
 
     public static function create(Collection|array $files, ?string $filename = null)
     {
-        $files = collect(self::files($files))->filter(fn ($file) => self::fileExists($file))->all();
+        $files = self::files($files)->filter(fn ($file) => self::fileExists($file));
 
-        $zip = Zip::create(self::filename($filename), $files);
+        if ($files->isEmpty()) {
+            return redirect()->back();
+        }
+
+        $zip = Zip::create(self::filename($filename), $files->all());
 
         if (! config('zipper.save')) {
             return $zip;
@@ -39,16 +44,13 @@ class Zipper
             : $zip->cache($cachepath);
     }
 
-    protected static function files(Collection|array $files): array
+    protected static function files(Collection|array $files): Collection
     {
         return collect($files)
             ->map(fn ($file) => match (true) {
-                ($file instanceof Asset) => $file->absoluteUrl(),
-                (is_array($file)) => Arr::get($file, 'url'),
+                ($file instanceof Asset) => $file->resolvedPath(),
                 default => $file,
-            })
-            ->filter(fn ($file) => filter_var($file, FILTER_VALIDATE_URL))
-            ->all();
+            });
     }
 
     protected static function filename(?string $filename): string
@@ -56,12 +58,16 @@ class Zipper
         return $filename ? "{$filename}.zip" : time().'.zip';
     }
 
-    protected static function fileExists(string $file): bool
+    protected static function fileExists(string $path): bool
     {
-        try {
-            return Http::get($file)->successful();
-        } catch (Exception $e) {
-            return false;
+        if (URL::isValidUrl($path)) {
+            try {
+                return Http::get($path)->successful();
+            } catch (Exception $e) {
+                return false;
+            }
         }
+
+        return File::exists($path);
     }
 }

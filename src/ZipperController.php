@@ -3,18 +3,20 @@
 namespace Aerni\Zipper;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Crypt;
 use Statamic\Http\Controllers\Controller;
 
 class ZipperController extends Controller
 {
-    public function create(Request $request)
+    public function create(string $files, Request $request)
     {
-        $data = $request->validate([
-            'files' => 'required|array',
+        $request->validate([
             'filename' => 'sometimes|required|string',
         ]);
 
-        return Zipper::create(Arr::get($data, 'files'), Arr::get($data, 'filename'));
+        return Zipper::create(
+            files: json_decode(Crypt::decryptString($files)),
+            filename: $request->get('filename')
+        );
     }
 }
