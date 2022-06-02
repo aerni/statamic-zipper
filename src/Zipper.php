@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Facades\File;
 use STS\ZipStream\ZipStreamFacade as Zip;
@@ -24,7 +26,7 @@ class Zipper
 
     public static function create(Collection|array $files, ?string $filename = null)
     {
-        $files = self::files($files)->filter(fn ($file) => self::fileExists($file));
+        $files = self::files($files)->filter(fn ($file) => self::exists($file));
 
         if ($files->isEmpty()) {
             return redirect()->back();
@@ -46,11 +48,21 @@ class Zipper
 
     protected static function files(Collection|array $files): Collection
     {
-        return collect($files)
-            ->map(fn ($file) => match (true) {
-                ($file instanceof Asset) => $file->resolvedPath(),
-                default => $file,
-            });
+        return collect($files)->map(fn ($file) => match (true) {
+            ($file instanceof Asset) => self::path($file),
+            default => $file,
+        });
+    }
+
+    protected static function path(Asset $file): string
+    {
+        $adapter = $file->disk()->filesystem()->getAdapter();
+
+        return match (true) {
+            ($adapter instanceof Local) => $file->resolvedPath(),
+            ($adapter instanceof AwsS3Adapter) => $file->absoluteUrl(),
+            default => throw new Exception('Zipper doesn\'t support ['.$adapter::class.'].'),
+        };
     }
 
     protected static function filename(?string $filename): string
@@ -58,16 +70,16 @@ class Zipper
         return $filename ? "{$filename}.zip" : time().'.zip';
     }
 
-    protected static function fileExists(string $path): bool
+    protected static function exists(string $file): bool
     {
-        if (URL::isValidUrl($path)) {
+        if (URL::isValidUrl($file)) {
             try {
-                return Http::get($path)->successful();
+                return Http::get($file)->successful();
             } catch (Exception $e) {
                 return false;
             }
         }
 
-        return File::exists($path);
+        return File::exists($file);
     }
 }
