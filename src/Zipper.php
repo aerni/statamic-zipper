@@ -38,8 +38,7 @@ class Zipper
             return $zip;
         }
 
-        $path = Storage::disk(config('zipper.disk'))->getAdapter()->getPathPrefix();
-        $cachepath = self::filename($path.$zip->getFingerprint());
+        $cachepath = Storage::disk(config('zipper.disk'))->path(self::filename($zip->getFingerprint()));
 
         return File::exists($cachepath)
             ? response()->download($cachepath, $zip->getName())
