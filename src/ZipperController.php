@@ -15,7 +15,7 @@ class ZipperController extends Controller
         ]);
 
         return Zipper::create(
-            files: json_decode(Crypt::decryptString($files)),
+            files: json_decode(Crypt::decryptString($files), true),
             filename: $request->get('filename')
         );
     }

@@ -18,6 +18,7 @@
     ],
     "require": {
         "php": "^8.0",
+        "aws/aws-sdk-php": "^3.224",
         "statamic/cms": "~3.3.12",
         "stechstudio/laravel-zipstream": "^4.5"
     },
