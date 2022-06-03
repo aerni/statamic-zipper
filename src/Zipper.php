@@ -88,7 +88,8 @@ class Zipper
     {
         $files = $files->map(fn ($file) => match (true) {
             ($file instanceof Asset) => $file->id(),
-            default => $file
+            (is_string($file)) => $file,
+            default => throw new Exception('Unsupported file type. The file has to be an Statamic Asset or a string.')
         });
 
         return Crypt::encryptString($files);
