@@ -3,7 +3,6 @@
 namespace Aerni\Zipper;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
 use Statamic\Http\Controllers\Controller;
 
 class ZipperController extends Controller
@@ -15,7 +14,7 @@ class ZipperController extends Controller
         ]);
 
         return Zipper::create(
-            files: json_decode(Crypt::decryptString($files), true),
+            files: Zipper::decrypt($files),
             filename: $request->get('filename')
         );
     }
