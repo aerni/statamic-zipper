@@ -87,7 +87,7 @@ The `create` method creates and returns the zip directly:
 \Aerni\Zipper\Zipper::create($files, $filename);
 ```
 
-The `$files` need to be a Collection of Assets, paths or URLs:
+The `$files` need to be a collection of assets, paths or URLs:
 
 ```php
 $files = collect([
