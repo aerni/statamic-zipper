@@ -6,8 +6,8 @@ use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
+use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Facades\Asset as AssetFacade;
 use STS\ZipStream\Models\File;
@@ -46,16 +46,16 @@ class Zipper
 
         $adapter = $disk->getAdapter();
 
-        if ($adapter instanceof Local) {
+        if ($adapter instanceof LocalFilesystemAdapter) {
             return $zip->cache($disk->path($filename));
         }
 
-        if ($adapter instanceof AwsS3Adapter) {
-            $path = "s3://{$adapter->getBucket()}/{$disk->path($filename)}";
-            $s3Client = $adapter->getClient();
+        if ($adapter instanceof AwsS3V3Adapter) {
+            $path = "s3://{$disk->getConfig()['bucket']}/{$disk->path($filename)}";
+            $s3Client = $disk->getClient();
             $file = File::make($path)->setS3Client($s3Client);
 
-            return $zip->cache($file);
+            return $zip->add($file);
         }
 
         throw new Exception('Zipper doesn\'t support ['.$adapter::class.'].');
@@ -67,15 +67,16 @@ class Zipper
             return $zip->add($file);
         }
 
-        $adapter = $file->disk()->filesystem()->getAdapter();
+        $disk = $file->disk()->filesystem();
+        $adapter = $disk->getAdapter();
 
-        if ($adapter instanceof Local) {
+        if ($adapter instanceof LocalFilesystemAdapter) {
             return $zip->add($file->resolvedPath());
         }
 
-        if ($adapter instanceof AwsS3Adapter) {
-            $path = "s3://{$adapter->getBucket()}/{$file->path}";
-            $s3Client = $adapter->getClient();
+        if ($adapter instanceof AwsS3V3Adapter) {
+            $path = "s3://{$disk->getConfig()['bucket']}/{$file->path()}";
+            $s3Client = $disk->getClient();
             $file = File::make($path)->setS3Client($s3Client);
 
             return $zip->add($file);
