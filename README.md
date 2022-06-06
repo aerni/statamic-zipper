@@ -87,18 +87,12 @@ The `create` method creates and returns the zip directly:
 \Aerni\Zipper\Zipper::create($files, $filename);
 ```
 
-The `$files` can be either one of the following:
+The `$files` need to be a collection of assets, paths or URLs:
 
 ```php
-// An array of Statamic assets
-$files = [
+$files = collect([
     Statamic\Assets\Asset,
-    Statamic\Assets\Asset,
-]
-
-// An array of paths or URLs
-$files = [
     '/home/ploi/site.com/storage/app/assets/file_1.jpg',
     'https://site.com/path/to/file_2.jpg',
-]
+])
 ```
