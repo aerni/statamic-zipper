@@ -55,7 +55,7 @@ class Zipper
             $s3Client = $disk->getClient();
             $file = File::make($path)->setS3Client($s3Client);
 
-            return $zip->add($file);
+            return $zip->cache($file);
         }
 
         throw new Exception('Zipper doesn\'t support ['.$adapter::class.'].');
