@@ -3,65 +3,108 @@
 namespace Aerni\Zipper;
 
 use Exception;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use Statamic\Contracts\Assets\Asset;
-use Statamic\Facades\File;
+use Statamic\Facades\Asset as AssetFacade;
+use STS\ZipStream\Models\File;
+use STS\ZipStream\ZipStream;
 use STS\ZipStream\ZipStreamFacade as Zip;
 
 class Zipper
 {
-    public static function route(Collection|array $files, ?string $filename = null): string
+    public static function route(Collection $files, ?string $filename = null): string
     {
         return route('statamic.zipper.create', [
-            'files' => self::files($files),
+            'files' => self::encrypt($files),
             'filename' => $filename,
         ]);
     }
 
-    public static function create(Collection|array $files, ?string $filename = null)
+    public static function create(Collection $files, ?string $filename = null): mixed
     {
-        $files = collect(self::files($files))->filter(fn ($file) => self::fileExists($file))->all();
+        $zip = Zip::create(self::filename($filename));
 
-        $zip = Zip::create(self::filename($filename), $files);
+        $files->each(fn ($file) => self::addFile($file, $zip));
 
-        if (! config('zipper.save')) {
-            return $zip;
-        }
-
-        $path = Storage::disk(config('zipper.disk'))->getAdapter()->getPathPrefix();
-        $cachepath = self::filename($path.$zip->getFingerprint());
-
-        return File::exists($cachepath)
-            ? response()->download($cachepath, $zip->getName())
-            : $zip->cache($cachepath);
+        return config('zipper.save')
+            ? self::cache($zip)
+            : $zip;
     }
 
-    protected static function files(Collection|array $files): array
+    protected static function cache(ZipStream $zip): mixed
     {
-        return collect($files)
-            ->map(fn ($file) => match (true) {
-                ($file instanceof Asset) => $file->absoluteUrl(),
-                (is_array($file)) => Arr::get($file, 'url'),
-                default => $file,
-            })
-            ->filter(fn ($file) => filter_var($file, FILTER_VALIDATE_URL))
-            ->all();
+        $disk = Storage::disk(config('zipper.disk'));
+        $filename = self::filename($zip->getFingerprint());
+
+        if ($disk->exists($filename)) {
+            return $disk->download($filename, $zip->getName());
+        }
+
+        $adapter = $disk->getAdapter();
+
+        if ($adapter instanceof LocalFilesystemAdapter) {
+            return $zip->cache($disk->path($filename));
+        }
+
+        if ($adapter instanceof AwsS3V3Adapter) {
+            $path = "s3://{$disk->getConfig()['bucket']}/{$disk->path($filename)}";
+            $s3Client = $disk->getClient();
+            $file = File::make($path)->setS3Client($s3Client);
+
+            return $zip->cache($file);
+        }
+
+        throw new Exception('Zipper doesn\'t support ['.$adapter::class.'].');
+    }
+
+    protected static function addFile(Asset|string $file, ZipStream $zip): ZipStream
+    {
+        if (is_string($file)) {
+            return $zip->add($file);
+        }
+
+        $disk = $file->disk()->filesystem();
+        $adapter = $disk->getAdapter();
+
+        if ($adapter instanceof LocalFilesystemAdapter) {
+            return $zip->add($file->resolvedPath());
+        }
+
+        if ($adapter instanceof AwsS3V3Adapter) {
+            $path = "s3://{$disk->getConfig()['bucket']}/{$file->path()}";
+            $s3Client = $disk->getClient();
+            $file = File::make($path)->setS3Client($s3Client);
+
+            return $zip->add($file);
+        }
+
+        throw new Exception('Zipper doesn\'t support ['.$adapter::class.'].');
+    }
+
+    protected static function encrypt(Collection $files): string
+    {
+        $files = $files->map(fn ($file) => match (true) {
+            ($file instanceof Asset) => $file->id(),
+            (is_string($file)) => $file,
+            default => throw new Exception('Unsupported file type. The file has to be a Statamic Asset, a URL or an absolute path.')
+        });
+
+        return Crypt::encryptString($files);
+    }
+
+    public static function decrypt(string $files): Collection
+    {
+        $files = json_decode(Crypt::decryptString($files));
+
+        return collect($files)->map(fn ($file) => AssetFacade::find($file) ?? $file);
     }
 
     protected static function filename(?string $filename): string
     {
         return $filename ? "{$filename}.zip" : time().'.zip';
-    }
-
-    protected static function fileExists(string $file): bool
-    {
-        try {
-            return Http::get($file)->successful();
-        } catch (Exception $e) {
-            return false;
-        }
     }
 }
