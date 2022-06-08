@@ -30,7 +30,7 @@ class Zipper
 
         $files->each(fn ($file) => self::addFile($file, $zip));
 
-        return config('zipper.save')
+        return $filename && config('zipper.save')
             ? self::cache($zip)
             : $zip;
     }
