@@ -9,6 +9,10 @@ class ZipperController extends Controller
 {
     public function create(string $files, Request $request)
     {
+        if (! $request->hasValidSignature()) {
+            abort(401);
+        }
+
         $request->validate([
             'filename' => 'sometimes|required|string',
         ]);

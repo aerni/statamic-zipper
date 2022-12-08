@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use Statamic\Contracts\Assets\Asset;
@@ -16,12 +17,23 @@ use STS\ZipStream\ZipStreamFacade as Zip;
 
 class Zipper
 {
-    public static function route(Collection $files, ?string $filename = null): string
+    public static function route(Collection $files, ?string $filename = null, ?int $expiry = null): string
     {
-        return route('statamic.zipper.create', [
-            'files' => self::encrypt($files),
-            'filename' => $filename,
-        ]);
+        $expiry = $expiry ?? config('zipper.expiry');
+
+        if (empty($expiry)) {
+            return route('statamic.zipper.create', [
+                'files' => self::encrypt($files),
+                'filename' => $filename,
+            ]);
+        }
+
+        return URL::temporarySignedRoute(
+            'statamic.zipper.create', now()->addSeconds($expiry), [
+                'files' => self::encrypt($files),
+                'filename' => $filename,
+            ]
+        );
     }
 
     public static function create(Collection $files, ?string $filename = null): mixed
