@@ -22,10 +22,12 @@ class Zipper
         $expiry = $expiry ?? config('zipper.expiry');
 
         if (empty($expiry)) {
-            return route('statamic.zipper.create', [
-                'files' => self::encrypt($files),
-                'filename' => $filename,
-            ]);
+            return URL::signedRoute(
+                'statamic.zipper.create', [
+                    'files' => self::encrypt($files),
+                    'filename' => $filename,
+                ]
+            );
         }
 
         return URL::temporarySignedRoute(
