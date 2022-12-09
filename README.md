@@ -76,14 +76,17 @@ Somehwere in your views:
 {{ zip:images }}
 ```
 
-You may optionally pass a filename using the `filename` parameter. The example below binds the name of the zip to the title of the current page. The filename defaults to the current timestamp.
+### Filename
+
+You may optionally pass a filename using the `filename` parameter. If you don't provide one, the filename will default to the timestamp at the time of download. The example below binds the name of the zip to the title of the page. 
 
 ```antlers
 {{ zip:images :filename='title' }}
 ```
 
 ### Link Expiry
-If you want to expire your links after a certain time, you can either set the expiry globally in the config, or use the `expiry` parameter on the tag. The expiry is to be set in minutes.
+
+If you want to expire your links after a certain time, you can either set the expiry globally in the config, or use the `expiry` parameter on the tag. The expiry is to be set in minutes. Note, that the expiry on the tag will overide the expiry in the config.
 
 ```antlers
 {{ zip:images expiry="60" }}
@@ -96,7 +99,7 @@ This addon also exposes two methods that let you get the route or create a zip p
 The `route` method returns the route that handles creating the zip. This is the same as using the `zip` tag in your views:
 
 ```php
-\Aerni\Zipper\Zipper::route($files, $filename);
+\Aerni\Zipper\Zipper::route($files, $filename, $expiry);
 ```
 
 The `create` method creates and returns the zip directly:
