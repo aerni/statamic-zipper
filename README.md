@@ -26,7 +26,7 @@ return [
     | Save To Disk
     |--------------------------------------------------------------------------
     |
-    | Set this to 'true' to save the zips to disk.
+    | Set this to 'true' to save the created zips to disk.
     | The saved file will be used the next time a user requests a zip with the same payload.
     |
     */
@@ -43,6 +43,17 @@ return [
     */
 
     'disk' => 'public',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Link Expiry
+    |--------------------------------------------------------------------------
+    |
+    | Set the time in minutes after which a link should expire.
+    |
+    */
+
+    'expiry' => null,
 
 ];
 ```
@@ -61,14 +72,21 @@ images:
 
 Somehwere in your views:
 
-```html
+```antlers
 {{ zip:images }}
 ```
 
 You may optionally pass a filename using the `filename` parameter. The example below binds the name of the zip to the title of the current page. The filename defaults to the current timestamp.
 
-```html
+```antlers
 {{ zip:images :filename='title' }}
+```
+
+### Link Expiry
+If you want to expire your links after a certain time, you can either set the expiry globally in the config, or use the `expiry` parameter on the tag. The expiry is to be set in minutes.
+
+```antlers
+{{ zip:images expiry="60" }}
 ```
 
 ## Advanced Usage
