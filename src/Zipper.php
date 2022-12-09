@@ -118,7 +118,7 @@ class Zipper
 
         return [
             'files' => $files,
-            'filename' => $plaintext['filename']
+            'filename' => $plaintext['filename'],
         ];
     }
 
