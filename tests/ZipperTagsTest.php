@@ -48,7 +48,8 @@ class ZipperTagsTest extends TestCase
 
         $url = $this->tag->wildcard();
 
-        $files = Str::afterLast($url, '/');
+        $uri = Str::afterLast($url, '/');
+        $files = Str::before($uri, '?signature');
         $file = Zipper::decrypt($files)[0];
 
         $this->assertSame($value->value()->resolvedPath(), $file->resolvedPath());
@@ -73,7 +74,8 @@ class ZipperTagsTest extends TestCase
 
         $url = $this->tag->wildcard();
 
-        $files = Str::afterLast($url, '/');
+        $uri = Str::afterLast($url, '/');
+        $files = Str::before($uri, '?signature');
         $files = Zipper::decrypt($files)->map(fn ($file) => $file->resolvedPath());
 
         $value->value()->get()->each(function ($file) use ($files) {
