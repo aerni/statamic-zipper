@@ -33,7 +33,7 @@ class Zipper
 
         return URL::temporarySignedRoute(
             'statamic.zipper.create',
-            now()->addSeconds($expiry),
+            now()->addMinutes($expiry),
             [
                 'files' => self::encrypt($files),
                 'filename' => $filename,

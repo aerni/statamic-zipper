@@ -30,7 +30,7 @@ return [
     | Link Expiry
     |--------------------------------------------------------------------------
     |
-    | Set the time in seconds after which a link should expire.
+    | Set the time in minutes after which a link should expire.
     |
     */
 
