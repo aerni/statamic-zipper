@@ -7,19 +7,17 @@ use Statamic\Http\Controllers\Controller;
 
 class ZipperController extends Controller
 {
-    public function create(string $files, Request $request)
+    public function create(string $cipher, Request $request)
     {
         if (! $request->hasValidSignature()) {
             abort(401);
         }
 
-        $request->validate([
-            'filename' => 'sometimes|required|string',
-        ]);
+        $plaintext = Zipper::decrypt($cipher);
 
         return Zipper::create(
-            files: Zipper::decrypt($files),
-            filename: $request->get('filename')
+            files: $plaintext['files'],
+            filename: $plaintext['filename'],
         );
     }
 }

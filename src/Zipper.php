@@ -24,20 +24,14 @@ class Zipper
         if (empty($expiry)) {
             return URL::signedRoute(
                 'statamic.zipper.create',
-                [
-                    'files' => self::encrypt($files),
-                    'filename' => $filename,
-                ]
+                self::encrypt($files, $filename)
             );
         }
 
         return URL::temporarySignedRoute(
             'statamic.zipper.create',
             now()->addMinutes($expiry),
-            [
-                'files' => self::encrypt($files),
-                'filename' => $filename,
-            ]
+            self::encrypt($files, $filename)
         );
     }
 
@@ -102,7 +96,7 @@ class Zipper
         throw new Exception('Zipper doesn\'t support ['.$adapter::class.'].');
     }
 
-    protected static function encrypt(Collection $files): string
+    protected static function encrypt(Collection $files, ?string $filename): string
     {
         $files = $files->map(fn ($file) => match (true) {
             ($file instanceof Asset) => $file->id(),
@@ -110,14 +104,22 @@ class Zipper
             default => throw new Exception('Unsupported file type. The file has to be a Statamic Asset, a URL or an absolute path.')
         });
 
-        return Crypt::encryptString($files);
+        return Crypt::encrypt([
+            'files' => $files,
+            'filename' => $filename,
+        ]);
     }
 
-    public static function decrypt(string $files): Collection
+    public static function decrypt(string $cipher): array
     {
-        $files = json_decode(Crypt::decryptString($files));
+        $plaintext = Crypt::decrypt($cipher);
 
-        return collect($files)->map(fn ($file) => AssetFacade::find($file) ?? $file);
+        $files = collect($plaintext['files'])->map(fn ($file) => AssetFacade::find($file) ?? $file);
+
+        return [
+            'files' => $files,
+            'filename' => $plaintext['filename']
+        ];
     }
 
     protected static function filename(?string $filename): string
