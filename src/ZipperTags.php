@@ -22,7 +22,8 @@ class ZipperTags extends Tags
 
         return Zipper::route(
             files: collect($files),
-            filename: $this->params->get('filename')
+            filename: $this->params->get('filename'),
+            expiry: $this->params->get('expiry'),
         );
     }
 }
