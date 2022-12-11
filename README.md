@@ -81,7 +81,7 @@ Somehwere in your views:
 You may optionally pass a filename using the `filename` parameter. If you don't provide one, the filename will default to the timestamp at the time of download. The example below binds the name of the zip to the title of the page.
 
 ```antlers
-{{ zip:images :filename='title' }}
+{{ zip:images :filename="title" }}
 ```
 
 ### Link Expiry
@@ -109,10 +109,10 @@ $files = [
 // Make a zip with the files above.
 $zip = Zip::make($files);
 
-// Set an optional filename. This falls back to the current timestamp.
+// Set an optional filename. This defaults to the timestamp when the object was created.
 $zip->filename('obi-wan-kenobi')
 
-// Set an optional expiry time in minutes, after which the zip route is invalidated.
+// Set an optional expiry time in minutes. This defaults to the expiry set in the config.
 $zip->expiry(60);
 
 // Get the URL that handles creating the zip.
