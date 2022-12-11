@@ -3,9 +3,9 @@
 namespace Aerni\Zipper;
 
 use Illuminate\Http\Request;
-use STS\ZipStream\ZipStream;
 use Illuminate\Support\Facades\Crypt;
 use Statamic\Http\Controllers\Controller;
+use STS\ZipStream\ZipStream;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ZipperController extends Controller
