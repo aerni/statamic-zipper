@@ -12,7 +12,7 @@ class ZipperTags extends Tags
 
     public function wildcard(): string
     {
-        $value = $this->context->get($this->method)?->value();
+        $value = $this->context->value($this->method);
 
         $files = match (true) {
             ($value instanceof Asset) => [$value], // Handle asset fields with `max_files: 1`.
@@ -20,10 +20,9 @@ class ZipperTags extends Tags
             default => [],
         };
 
-        return Zipper::route(
-            files: collect($files),
-            filename: $this->params->get('filename'),
-            expiry: $this->params->get('expiry'),
-        );
+        return Zip::make($files)
+            ->filename($this->params->get('filename'))
+            ->expiry($this->params->get('expiry') ?? (int) config('zipper.expiry'))
+            ->route();
     }
 }

@@ -3,6 +3,7 @@
 namespace Aerni\Zipper;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Statamic\Http\Controllers\Controller;
 
 class ZipperController extends Controller
@@ -13,11 +14,8 @@ class ZipperController extends Controller
             abort(403);
         }
 
-        $plaintext = Zipper::decrypt($cipher);
+        $zip = Crypt::decrypt($cipher);
 
-        return Zipper::create(
-            files: $plaintext['files'],
-            filename: $plaintext['filename'],
-        );
+        return $zip->get();
     }
 }
