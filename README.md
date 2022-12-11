@@ -78,7 +78,7 @@ Somehwere in your views:
 
 ### Filename
 
-You may optionally pass a filename using the `filename` parameter. If you don't provide one, the filename will default to the timestamp at the time of download. The example below binds the name of the zip to the title of the page.
+You may optionally pass a filename using the `filename` parameter. The filename defaults to the timestamp when the Zip object was created. The example below binds the name of the zip to the title of the page.
 
 ```antlers
 {{ zip:images :filename="title" }}
