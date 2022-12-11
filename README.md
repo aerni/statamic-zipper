@@ -97,24 +97,26 @@ If you want to expire your links after a certain time, you can either set the ex
 You may also use this addon programmatically as shown below.
 
 ```php
-// Make a zip from an array of files.
-$zip = \Aerni\Zipper\Zip::make($files);
+use Aerni\Zipper\Zip;
 
-// The files need to be an array of assets, paths or URLs.
+// Prepare an array of Statamic assets, paths or URLs.
 $files = [
     Statamic\Assets\Asset,
     '/home/ploi/site.com/storage/app/assets/file_1.jpg',
     'https://site.com/path/to/file_2.jpg',
 ];
 
-// Set a custom filename. If no filename is provided, it falls back to the current timestamp.
+// Make a zip with the files above.
+$zip = Zip::make($files);
+
+// Set an optional filename. This falls back to the current timestamp.
 $zip->filename('obi-wan-kenobi')
 
-// Set the time in minutes, after which the zip route should expire.
+// Set an optional expiry time in minutes, after which the zip route is invalidated.
 $zip->expiry(60);
 
-// Get the route that handles creating the zip.
-$zip->route();
+// Get the URL that handles creating the zip.
+$zip->url();
 
 // Create a new zip or download a previously cached zip.
 $zip->get();
