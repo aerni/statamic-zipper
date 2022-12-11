@@ -78,7 +78,7 @@ Somehwere in your views:
 
 ### Filename
 
-You may optionally pass a filename using the `filename` parameter. If you don't provide one, the filename will default to the timestamp at the time of download. The example below binds the name of the zip to the title of the page. 
+You may optionally pass a filename using the `filename` parameter. If you don't provide one, the filename will default to the timestamp at the time of download. The example below binds the name of the zip to the title of the page.
 
 ```antlers
 {{ zip:images :filename='title' }}
@@ -94,26 +94,28 @@ If you want to expire your links after a certain time, you can either set the ex
 
 ## Advanced Usage
 
-This addon also exposes two methods that let you get the route or create a zip programmatically.
-
-The `route` method returns the route that handles creating the zip. This is the same as using the `zip` tag in your views:
+You may also use this addon programmatically as shown below.
 
 ```php
-\Aerni\Zipper\Zipper::route($files, $filename, $expiry);
-```
+// Make a zip from an array of files.
+$zip = \Aerni\Zipper\Zip::make($files);
 
-The `create` method creates and returns the zip directly:
-
-```php
-\Aerni\Zipper\Zipper::create($files, $filename);
-```
-
-The `$files` need to be a collection of assets, paths or URLs:
-
-```php
-$files = collect([
+// The files need to be an array of assets, paths or URLs.
+$files = [
     Statamic\Assets\Asset,
     '/home/ploi/site.com/storage/app/assets/file_1.jpg',
     'https://site.com/path/to/file_2.jpg',
-])
+];
+
+// Set a custom filename. If no filename is provided, it falls back to the current timestamp.
+$zip->filename('obi-wan-kenobi')
+
+// Set the time in minutes, after which the zip route should expire.
+$zip->expiry(60);
+
+// Get the route that handles creating the zip.
+$zip->route();
+
+// Create a new zip or download a previously cached zip.
+$zip->get();
 ```

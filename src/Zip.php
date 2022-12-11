@@ -94,7 +94,7 @@ class Zip
     }
 
     /**
-     * Create or get the existing zip file.
+     * Create a new zip or download a previously cached zip.
      */
     public function get(): ZipStream|StreamedResponse
     {
