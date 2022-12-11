@@ -80,7 +80,7 @@ class Zip
     /**
      * Returns the route that handles creating the zip.
      */
-    public function route(): string
+    public function url(): string
     {
         if (empty($this->expiry)) {
             return URL::signedRoute('statamic.zipper.create', Crypt::encrypt($this));

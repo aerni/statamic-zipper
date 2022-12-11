@@ -23,6 +23,6 @@ class ZipperTags extends Tags
         return Zip::make($files)
             ->filename($this->params->get('filename'))
             ->expiry($this->params->get('expiry') ?? (int) config('zipper.expiry'))
-            ->route();
+            ->url();
     }
 }
