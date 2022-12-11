@@ -3,16 +3,16 @@
 namespace Aerni\Zipper;
 
 use Exception;
-use STS\ZipStream\ZipStream;
-use STS\ZipStream\Models\File;
 use Illuminate\Support\Collection;
-use STS\ZipStream\ZipStreamFacade;
-use Illuminate\Support\Facades\URL;
-use Statamic\Contracts\Assets\Asset;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use Statamic\Contracts\Assets\Asset;
+use STS\ZipStream\Models\File;
+use STS\ZipStream\ZipStream;
+use STS\ZipStream\ZipStreamFacade;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Zip

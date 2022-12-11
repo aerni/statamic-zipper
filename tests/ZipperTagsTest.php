@@ -3,12 +3,12 @@
 namespace Aerni\Zipper\Tests;
 
 use Aerni\Zipper\ZipperTags;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
 use Statamic\Fieldtypes\Assets\Assets;
-use Illuminate\Support\Facades\Crypt;
 
 class ZipperTagsTest extends TestCase
 {
