@@ -3,16 +3,16 @@
 namespace Aerni\Zipper;
 
 use Exception;
+use Aerni\Zipper\ZipStore;
+use STS\ZipStream\ZipStream;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Storage;
+use STS\ZipStream\ZipStreamFacade;
 use Illuminate\Support\Facades\URL;
+use Statamic\Contracts\Assets\Asset;
+use Illuminate\Support\Facades\Storage;
+use STS\ZipStream\Models\File;
 use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
-use Statamic\Contracts\Assets\Asset;
-use STS\ZipStream\Models\File;
-use STS\ZipStream\ZipStream;
-use STS\ZipStream\ZipStreamFacade;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Zip
@@ -82,15 +82,23 @@ class Zip
      */
     public function url(): string
     {
-        if (empty($this->expiry)) {
-            return URL::signedRoute('statamic.zipper.create', Crypt::encrypt($this));
+        return empty($this->expiry)
+            ? URL::signedRoute('statamic.zipper.create', $this->reference())
+            : URL::temporarySignedRoute('statamic.zipper.create', now()->addMinutes($this->expiry), $this->reference());
+    }
+
+    /**
+     * Save the encrypted zip to file so we can later get it in the controller.
+     */
+    public function saveReferenceFile(): self
+    {
+        $store = new ZipStore();
+
+        if (! $store->exists($this->reference())) {
+            $store->put($this->reference(), $this);
         }
 
-        return URL::temporarySignedRoute(
-            'statamic.zipper.create',
-            now()->addMinutes($this->expiry),
-            Crypt::encrypt($this)
-        );
+        return $this;
     }
 
     /**
@@ -186,5 +194,13 @@ class Zip
     protected function shouldCacheZip(): bool
     {
         return config('zipper.save') && $this->hasCustomFilename();
+    }
+
+    /**
+     * The unique reference of this zip file.
+     */
+    protected function reference(): string
+    {
+        return $this->create()->getFingerprint();
     }
 }
