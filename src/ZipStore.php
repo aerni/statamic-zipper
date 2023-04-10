@@ -2,10 +2,9 @@
 
 namespace Aerni\Zipper;
 
-use Aerni\Zipper\Zip;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Contracts\Filesystem\Filesystem;
 
 class ZipStore
 {

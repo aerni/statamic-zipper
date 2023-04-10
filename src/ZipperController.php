@@ -2,11 +2,10 @@
 
 namespace Aerni\Zipper;
 
-use Aerni\Zipper\ZipStore;
 use Illuminate\Http\Request;
-use STS\ZipStream\ZipStream;
 use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Http\Controllers\Controller;
+use STS\ZipStream\ZipStream;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ZipperController extends Controller
