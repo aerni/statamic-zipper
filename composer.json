@@ -20,7 +20,7 @@
         "php": "^8.0",
         "aws/aws-sdk-php": "^3.224",
         "laravel/framework": "^9.0",
-        "statamic/cms": "~3.3.12",
+        "statamic/cms": "~3.4.0",
         "stechstudio/laravel-zipstream": "^4.8"
     },
     "require-dev": {
