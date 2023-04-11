@@ -82,19 +82,19 @@ class Zip
     public function url(): string
     {
         return empty($this->expiry)
-            ? URL::signedRoute('statamic.zipper.create', $this->reference())
-            : URL::temporarySignedRoute('statamic.zipper.create', now()->addMinutes($this->expiry), $this->reference());
+            ? URL::signedRoute('statamic.zipper.create', $this->id())
+            : URL::temporarySignedRoute('statamic.zipper.create', now()->addMinutes($this->expiry), $this->id());
     }
 
     /**
-     * Save the encrypted zip to file so we can later get it in the controller.
+     * Encrypt and store this class so we can later restore it in the controller.
      */
     public function saveReferenceFile(): self
     {
         $store = new ZipStore();
 
-        if (! $store->exists($this->reference())) {
-            $store->put($this->reference(), $this);
+        if (! $store->exists($this->id())) {
+            $store->put($this->id(), $this);
         }
 
         return $this;
@@ -198,7 +198,7 @@ class Zip
     /**
      * The unique reference of this zip file.
      */
-    protected function reference(): string
+    protected function id(): string
     {
         return md5($this->create()->getFingerprint().$this->expiry);
     }
