@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ZipperController extends Controller
 {
-    public function create(string $id): ZipStream|StreamedResponse
+    public function __invoke(string $id): ZipStream|StreamedResponse
     {
         return ZipperStore::get($id)->get();
     }
