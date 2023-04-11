@@ -36,4 +36,20 @@ return [
 
     'expiry' => null,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Cleanup Scope
+    |--------------------------------------------------------------------------
+    |
+    | The scope to use when cleaning up your zip references with the scheduled command.
+    |
+    | Options:
+    | "expired": Only delete expired reference files
+    | "all": Delete all reference files excluding unexpired files
+    | "force": Delete all reference files including unexpired files
+    |
+    */
+
+    'cleanup' => 'expired',
+
 ];

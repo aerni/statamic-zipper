@@ -55,6 +55,22 @@ return [
 
     'expiry' => null,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Cleanup Scope
+    |--------------------------------------------------------------------------
+    |
+    | The scope to use when cleaning up your zip references with the scheduled command.
+    |
+    | Options:
+    | "expired": Only delete expired reference files
+    | "all": Delete all reference files excluding unexpired files
+    | "force": Delete all reference files including unexpired files
+    |
+    */
+
+    'cleanup' => 'expired',
+
 ];
 ```
 
@@ -90,6 +106,32 @@ If you want to expire your links after a certain time, you can either set the ex
 
 ```antlers
 {{ zip:images expiry="60" }}
+```
+
+## Cleanup Old References
+
+Zipper saves an encrypted instance of the Zip class every time it returns a URL. These reference files are stored in `storage/zipper/{id}`. Whenever a user downloads a zip, Zipper will retrieve and decrypt the requested Zip instance. 
+
+With time, the amound of saved reference files will grow. To get this under control, Zipper provides a scheduled command that will daily delete old reference files. Just make sure that your Scheduler is running.
+
+### Cleanup Scopes
+
+There are a couple of cleanup scopes you can define in the config:
+
+| Option    | Description                                                                                                                                                                             |
+|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `expired` | Only delete expired references files. This only affects references of zips that used the `expiry` option                                                                                |
+| `all`     | Delete all reference files excluding unexpired files. This will delete references of zips that didn't use the expiry option as well as expired zips. It will not delete unexpired zips. |
+| `force`   | Delete all reference files including unexpired files. This will completely wipe all references.                                                                                         |
+
+### Clean Command
+
+You may also use the `clean` command to delete reference files at your will. The scope defaults to `expired`.
+
+```bash
+php please zipper:clean
+php please zipper:clean --scope=all
+php please zipper:clean --scope=force
 ```
 
 ## Advanced Usage

@@ -3,6 +3,8 @@
 namespace Aerni\Zipper;
 
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,6 +18,12 @@ class ZipperStore
             'driver' => 'local',
             'root' => storage_path('statamic/zipper'),
         ]);
+    }
+
+    public function all(): Collection
+    {
+        return collect($this->store->allFiles())
+            ->map(fn ($file) => $this->get($file));
     }
 
     public function put(string $path, Zip $zip): bool
@@ -35,5 +43,17 @@ class ZipperStore
     public function exists(string $path): bool
     {
         return $this->store->exists($path);
+    }
+
+    public function delete(string $path): bool
+    {
+        return $this->store->delete($path);
+    }
+
+    public function createdAt(string $path): Carbon
+    {
+        $createdAt = filemtime(storage_path('statamic/zipper').'/'.$path);
+
+        return Carbon::createFromTimestamp($createdAt);
     }
 }
