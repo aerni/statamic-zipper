@@ -81,6 +81,8 @@ class Zip
      */
     public function url(): string
     {
+        $this->storeReferenceFile();
+
         return empty($this->expiry)
             ? URL::signedRoute('statamic.zipper.create', $this->id())
             : URL::temporarySignedRoute('statamic.zipper.create', now()->addMinutes($this->expiry), $this->id());
@@ -89,7 +91,7 @@ class Zip
     /**
      * Encrypt and store this class so we can later restore it in the controller.
      */
-    public function saveReferenceFile(): self
+    protected function storeReferenceFile(): self
     {
         $store = new ZipStore();
 
