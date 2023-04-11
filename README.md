@@ -110,7 +110,7 @@ If you want to expire your links after a certain time, you can either set the ex
 
 ## Cleanup Old References
 
-Zipper saves an encrypted instance of the Zip class every time it returns a URL. These reference files are stored in `storage/zipper/{id}`. Whenever a user requests to download a zip, Zipper will retrieve and decrypt the requested Zip instance. 
+Zipper saves an encrypted instance of the Zip class every time it returns a URL. These reference files are stored in `storage/zipper/{id}`. Whenever a user downloads a zip, Zipper will retrieve and decrypt the requested Zip instance. 
 
 With time, the amound of saved reference files will grow. To get this under control, Zipper provides a scheduled command that will daily delete old reference files. Just make sure that your Scheduler is running.
 
