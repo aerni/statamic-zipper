@@ -2,9 +2,9 @@
 
 namespace Aerni\Zipper;
 
+use Aerni\Zipper\Facades\ZipperStore;
 use Exception;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
@@ -82,15 +82,23 @@ class Zip
      */
     public function url(): string
     {
-        if (empty($this->expiry)) {
-            return URL::signedRoute('statamic.zipper.create', Crypt::encrypt($this));
+        $this->storeReferenceFile();
+
+        return empty($this->expiry)
+            ? URL::signedRoute('statamic.zipper.create', $this->id())
+            : URL::temporarySignedRoute('statamic.zipper.create', now()->addMinutes($this->expiry), $this->id());
+    }
+
+    /**
+     * Encrypt and store this class so we can later restore it in the controller.
+     */
+    protected function storeReferenceFile(): self
+    {
+        if (! ZipperStore::exists($this->id())) {
+            ZipperStore::put($this->id(), $this);
         }
 
-        return URL::temporarySignedRoute(
-            'statamic.zipper.create',
-            now()->addMinutes($this->expiry),
-            Crypt::encrypt($this)
-        );
+        return $this;
     }
 
     /**
@@ -186,5 +194,13 @@ class Zip
     protected function shouldCacheZip(): bool
     {
         return config('zipper.save') && $this->hasCustomFilename();
+    }
+
+    /**
+     * The unique reference of this zip file.
+     */
+    protected function id(): string
+    {
+        return md5($this->create()->getFingerprint().$this->expiry);
     }
 }
