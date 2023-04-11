@@ -1,7 +1,8 @@
 <?php
 
-namespace Aerni\Zipper;
+namespace Aerni\Zipper\Http\Controllers;
 
+use Aerni\Zipper\ZipperStore;
 use Illuminate\Http\Request;
 use Statamic\Exceptions\NotFoundHttpException;
 use Statamic\Http\Controllers\Controller;
