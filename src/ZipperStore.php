@@ -2,9 +2,10 @@
 
 namespace Aerni\Zipper;
 
-use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Filesystem\Filesystem;
 
 class ZipperStore
 {
@@ -35,5 +36,27 @@ class ZipperStore
     public function exists(string $path): bool
     {
         return $this->store->exists($path);
+    }
+
+    public function delete(string $path): bool
+    {
+        return $this->store->delete($path);
+    }
+
+    public function createdAt(string $path): Carbon
+    {
+        $createdAt = filemtime(storage_path('statamic/zipper').'/'.$path);
+
+        return Carbon::createFromTimestamp($createdAt);
+    }
+
+    public function deleteExpiredReferenceFiles(): bool
+    {
+        collect($this->store->allFiles())
+            ->map(fn ($file) => $this->get($file))
+            ->filter(fn ($zip) => $zip->expired())
+            ->each(fn ($zip) => $zip->deleteReferenceFile());
+
+        return true;
     }
 }

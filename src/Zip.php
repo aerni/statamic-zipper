@@ -2,17 +2,19 @@
 
 namespace Aerni\Zipper;
 
-use Aerni\Zipper\Facades\ZipperStore;
 use Exception;
+use Carbon\CarbonInterval;
+use STS\ZipStream\ZipStream;
+use Illuminate\Support\Carbon;
+use STS\ZipStream\Models\File;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Storage;
+use STS\ZipStream\ZipStreamFacade;
 use Illuminate\Support\Facades\URL;
+use Statamic\Contracts\Assets\Asset;
+use Aerni\Zipper\Facades\ZipperStore;
+use Illuminate\Support\Facades\Storage;
 use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
-use Statamic\Contracts\Assets\Asset;
-use STS\ZipStream\Models\File;
-use STS\ZipStream\ZipStream;
-use STS\ZipStream\ZipStreamFacade;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Zip
@@ -78,6 +80,20 @@ class Zip
     }
 
     /**
+     * Check if the stored zip reference file is expired.
+     */
+    public function expired(): bool
+    {
+        if (empty($this->expiry)) {
+            return false;
+        }
+
+        return ZipperStore::createdAt($this->id())
+            ->addMinutes($this->expiry)
+            ->isPast();
+    }
+
+    /**
      * Returns the route that handles creating the zip.
      */
     public function url(): string
@@ -94,9 +110,17 @@ class Zip
      */
     protected function storeReferenceFile(): self
     {
-        if (! ZipperStore::exists($this->id())) {
-            ZipperStore::put($this->id(), $this);
-        }
+        ZipperStore::put($this->id(), $this);
+
+        return $this;
+    }
+
+    /**
+     * Delete the zip reference file.
+     */
+    public function deleteReferenceFile(): self
+    {
+        ZipperStore::delete($this->id());
 
         return $this;
     }
