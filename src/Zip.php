@@ -200,6 +200,6 @@ class Zip
      */
     protected function reference(): string
     {
-        return $this->create()->getFingerprint();
+        return md5($this->create()->getFingerprint().$this->expiry);
     }
 }
