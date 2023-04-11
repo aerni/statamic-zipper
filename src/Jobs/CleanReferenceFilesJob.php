@@ -26,8 +26,8 @@ class CleanReferenceFilesJob
 
         $zips = match (true) {
             ($this->scope === 'expired') => $zips->filter(fn ($zip) => $zip->expired()), // Only delete expired reference files
-            ($this->scope === 'all') => $zips->filter(fn ($zip) => $zip->expired() || empty($zip->expiry())), // Delete all reference files (excluding unexpired files)
-            ($this->scope === 'force') => $zips, // Delete all reference files (including unexpired files)
+            ($this->scope === 'all') => $zips->filter(fn ($zip) => $zip->expired() || empty($zip->expiry())), // Delete all reference files excluding unexpired files
+            ($this->scope === 'force') => $zips, // Delete all reference files including unexpired files
             default => throw new \Exception('Please provide a valid cleanup scope.')
         };
 

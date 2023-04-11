@@ -45,8 +45,8 @@ return [
     |
     | Options:
     | "expired": Only delete expired reference files
-    | "all": Delete all reference files (excluding unexpired files)
-    | "force": Delete all reference files (including unexpired files)
+    | "all": Delete all reference files excluding unexpired files
+    | "force": Delete all reference files including unexpired files
     |
     */
 
