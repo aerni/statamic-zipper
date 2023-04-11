@@ -93,7 +93,7 @@ class Zip
      */
     protected function storeReferenceFile(): self
     {
-        $store = new ZipStore();
+        $store = new ZipperStore();
 
         if (! $store->exists($this->id())) {
             $store->put($this->id(), $this);

@@ -6,7 +6,7 @@ use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 
-class ZipStore
+class ZipperStore
 {
     protected Filesystem $store;
 

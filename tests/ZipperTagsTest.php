@@ -2,8 +2,8 @@
 
 namespace Aerni\Zipper\Tests;
 
+use Aerni\Zipper\ZipperStore;
 use Aerni\Zipper\ZipperTags;
-use Aerni\Zipper\ZipStore;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Statamic\Fields\Field;
@@ -25,7 +25,7 @@ class ZipperTagsTest extends TestCase
 
         $this->tag = app(ZipperTags::class);
 
-        $this->store = app(ZipStore::class);
+        $this->store = app(ZipperStore::class);
 
         Http::fake();
     }

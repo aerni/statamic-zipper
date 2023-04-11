@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ZipperController extends Controller
 {
-    public function create(string $reference, Request $request, ZipStore $store): ZipStream|StreamedResponse
+    public function create(string $reference, Request $request, ZipperStore $store): ZipStream|StreamedResponse
     {
         if (! $request->hasValidSignature()) {
             abort(403);
