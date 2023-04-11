@@ -2,12 +2,11 @@
 
 namespace Aerni\Zipper;
 
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
-use Aerni\Zipper\Jobs\CleanReferenceFilesJob;
-use Illuminate\Contracts\Filesystem\Filesystem;
 
 class ZipperStore
 {
