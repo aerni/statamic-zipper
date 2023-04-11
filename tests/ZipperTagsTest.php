@@ -2,7 +2,7 @@
 
 namespace Aerni\Zipper\Tests;
 
-use Aerni\Zipper\ZipperStore;
+use Aerni\Zipper\Facades\ZipperStore;
 use Aerni\Zipper\ZipperTags;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -24,8 +24,6 @@ class ZipperTagsTest extends TestCase
         $this->makeAssets();
 
         $this->tag = app(ZipperTags::class);
-
-        $this->store = app(ZipperStore::class);
 
         Http::fake();
     }
@@ -53,7 +51,7 @@ class ZipperTagsTest extends TestCase
         $uri = Str::afterLast($url, '/');
         $id = Str::before($uri, '?signature');
 
-        $file = $this->store->get($id)->files()[0];
+        $file = ZipperStore::get($id)->files()[0];
 
         $this->assertSame($value->value()->resolvedPath(), $file->resolvedPath());
     }
@@ -80,7 +78,7 @@ class ZipperTagsTest extends TestCase
         $uri = Str::afterLast($url, '/');
         $id = Str::before($uri, '?signature');
 
-        $files = $this->store->get($id)->files()->map(fn ($file) => $file->resolvedPath());
+        $files = ZipperStore::get($id)->files()->map(fn ($file) => $file->resolvedPath());
 
         $value->value()->get()->each(function ($file) use ($files) {
             $this->assertContains($file->resolvedPath(), $files);

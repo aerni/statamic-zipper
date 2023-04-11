@@ -2,6 +2,7 @@
 
 namespace Aerni\Zipper;
 
+use Aerni\Zipper\Facades\ZipperStore;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
@@ -93,10 +94,8 @@ class Zip
      */
     protected function storeReferenceFile(): self
     {
-        $store = new ZipperStore();
-
-        if (! $store->exists($this->id())) {
-            $store->put($this->id(), $this);
+        if (! ZipperStore::exists($this->id())) {
+            ZipperStore::put($this->id(), $this);
         }
 
         return $this;
