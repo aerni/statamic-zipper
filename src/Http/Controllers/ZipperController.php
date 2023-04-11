@@ -11,13 +11,13 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ZipperController extends Controller
 {
-    public function create(string $reference, Request $request, ZipperStore $store): ZipStream|StreamedResponse
+    public function create(string $id, Request $request, ZipperStore $store): ZipStream|StreamedResponse
     {
         if (! $request->hasValidSignature()) {
             abort(403);
         }
 
-        if (! $zip = $store->get($reference)) {
+        if (! $zip = $store->get($id)) {
             throw new NotFoundHttpException();
         }
 
