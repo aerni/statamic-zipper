@@ -8,7 +8,7 @@ use Statamic\Assets\AssetContainer;
 
 trait HasAssets
 {
-    protected $fakeAssetsDirectory = __DIR__ . '/__fixtures__/dev-null/assets';
+    protected $fakeAssetsDirectory = __DIR__.'/__fixtures__/dev-null/assets';
 
     protected function makeAssets()
     {

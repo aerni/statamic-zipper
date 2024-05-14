@@ -75,7 +75,7 @@ abstract class TestCase extends OrchestraTestCase
         ];
 
         foreach ($configs as $config) {
-            $app['config']->set("statamic.$config", require(__DIR__."/../vendor/statamic/cms/config/{$config}.php"));
+            $app['config']->set("statamic.$config", require (__DIR__."/../vendor/statamic/cms/config/{$config}.php"));
         }
 
         // Setting the user repository to the default flat file system
@@ -94,6 +94,6 @@ abstract class TestCase extends OrchestraTestCase
         $app['config']->set('statamic.stache.stores.users.directory', __DIR__.'/__fixtures__/users');
 
         // Define the addon config for our tests
-        $app['config']->set('zipper', require(__DIR__.'/../config/zipper.php'));
+        $app['config']->set('zipper', require (__DIR__.'/../config/zipper.php'));
     }
 }

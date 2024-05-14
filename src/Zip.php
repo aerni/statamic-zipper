@@ -18,7 +18,9 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class Zip
 {
     protected Collection $files;
+
     protected string $filename;
+
     protected int $expiry;
 
     public function __construct(array $files)
@@ -37,7 +39,7 @@ class Zip
     /**
      * Get and set the files to zip.
      */
-    public function files(array $files = null): Collection|self
+    public function files(?array $files = null): Collection|self
     {
         if (! func_get_args()) {
             return $this->files;
@@ -51,7 +53,7 @@ class Zip
     /**
      * Get and set the filename of the zip.
      */
-    public function filename(string $filename = null): string|self
+    public function filename(?string $filename = null): string|self
     {
         if (! func_get_args()) {
             return $this->filename;
@@ -66,7 +68,7 @@ class Zip
     /**
      * Get and set the expiry of the zip route.
      */
-    public function expiry(int $expiry = null): int|self
+    public function expiry(?int $expiry = null): int|self
     {
         if (! func_get_args()) {
             return $this->expiry;
