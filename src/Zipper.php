@@ -23,17 +23,16 @@ class Zipper
 
     protected int $expiry;
 
-    public function __construct(array $files)
+    public function __construct()
     {
-        $this
+    }
+
+    public function make(array $files): self
+    {
+        return $this
             ->files($files)
             ->filename(time())
             ->expiry((int) config('zipper.expiry'));
-    }
-
-    public static function make(array $files): self
-    {
-        return new self($files);
     }
 
     /**

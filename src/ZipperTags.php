@@ -2,9 +2,10 @@
 
 namespace Aerni\Zipper;
 
-use Statamic\Assets\OrderedQueryBuilder;
-use Statamic\Contracts\Assets\Asset;
 use Statamic\Tags\Tags;
+use Aerni\Zipper\Facades\Zipper;
+use Statamic\Contracts\Assets\Asset;
+use Statamic\Assets\OrderedQueryBuilder;
 
 class ZipperTags extends Tags
 {
