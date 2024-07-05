@@ -21,7 +21,7 @@ trait HasAssets
 
         $this->assetContainer = (new AssetContainer)->handle('test')->disk('test')->save();
 
-        collect(File::files(__DIR__.'/__fixtures__/assets'))->each(function ($file) {
+        collect(File::files(__DIR__.'/__fixtures__/content/assets'))->each(function ($file) {
             $file = new UploadedFile($file->getPathname(), $file->getFilename());
 
             $this->assetContainer->makeAsset($file->getFilename())->upload($file);

@@ -9,11 +9,12 @@ use Illuminate\Support\Str;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
 use Statamic\Fieldtypes\Assets\Assets;
+use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
 
 class ZipperTagsTest extends TestCase
 {
     use HasAssets;
-    use PreventSavingStacheItemsToDisk;
+    use PreventsSavingStacheItemsToDisk;
 
     private ZipperTags $tag;
 
