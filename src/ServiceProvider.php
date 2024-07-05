@@ -3,6 +3,7 @@
 namespace Aerni\Zipper;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Console\Scheduling\Schedule;
 use Statamic\Providers\AddonServiceProvider;
 use Aerni\Zipper\Commands\CleanReferenceFilesCommand;
 
@@ -30,7 +31,7 @@ class ServiceProvider extends AddonServiceProvider
         });
     }
 
-    protected function schedule($schedule)
+    protected function schedule(Schedule $schedule): void
     {
         $scope = config('zipper.cleanup', 'expired');
 
