@@ -88,7 +88,7 @@ class Zipper
             return false;
         }
 
-        return ZipperStore::createdAt($this->id())
+        return ZipperStore::lastModified($this->id())
             ->addMinutes($this->expiry)
             ->isPast();
     }

@@ -43,10 +43,8 @@ class ZipperStore
         return $this->store->delete($path);
     }
 
-    public function createdAt(string $path): Carbon
+    public function lastModified(string $path): Carbon
     {
-        $createdAt = filemtime(storage_path('statamic/zipper').'/'.$path);
-
-        return Carbon::createFromTimestamp($createdAt);
+        return Carbon::createFromTimestamp($this->store->lastModified($path));
     }
 }
