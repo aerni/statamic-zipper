@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\URL;
 use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use Statamic\Contracts\Assets\Asset;
-use STS\ZipStream\Models\File;
 use STS\ZipStream\Builder;
 use STS\ZipStream\Facades\Zip;
+use STS\ZipStream\Models\File;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Zipper
@@ -23,9 +23,7 @@ class Zipper
 
     protected int $expiry;
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function make(array $files): self
     {

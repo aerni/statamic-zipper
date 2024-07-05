@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Crypt;
 
 class ZipperStore
 {
-    public function __construct(protected Filesystem $store)
-    {
-    }
+    public function __construct(protected Filesystem $store) {}
 
     public function all(): Collection
     {

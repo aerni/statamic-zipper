@@ -2,10 +2,10 @@
 
 namespace Aerni\Zipper;
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Console\Scheduling\Schedule;
-use Statamic\Providers\AddonServiceProvider;
 use Aerni\Zipper\Commands\CleanReferenceFilesCommand;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\Storage;
+use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
 {
