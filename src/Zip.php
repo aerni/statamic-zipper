@@ -11,8 +11,8 @@ use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use Statamic\Contracts\Assets\Asset;
 use STS\ZipStream\Models\File;
-use STS\ZipStream\ZipStream;
-use STS\ZipStream\ZipStreamFacade;
+use STS\ZipStream\Builder;
+use STS\ZipStream\Facades\Zip as ZipStreamFacade;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Zip
@@ -128,7 +128,7 @@ class Zip
     /**
      * Create a new zip or download a previously cached zip.
      */
-    public function get(): ZipStream|StreamedResponse
+    public function get(): Builder|StreamedResponse
     {
         return $this->shouldCacheZip() ? $this->cache() : $this->create();
     }
@@ -136,7 +136,7 @@ class Zip
     /**
      * Create and stream a new zip.
      */
-    protected function create(): ZipStream
+    protected function create(): Builder
     {
         $zip = ZipStreamFacade::create("{$this->filename}.zip");
 
@@ -149,7 +149,7 @@ class Zip
      * Stream the zip while also caching it to disk for future requests.
      * This let's us download previously cached zips instead of creating new ones.
      */
-    protected function cache(): ZipStream|StreamedResponse
+    protected function cache(): Builder|StreamedResponse
     {
         $zip = $this->create();
         $filename = "{$zip->getFingerprint()}.zip";
@@ -179,7 +179,7 @@ class Zip
     /**
      * Add a file to the zip.
      */
-    protected function addFileToZip(Asset|string $file, ZipStream $zip): ZipStream
+    protected function addFileToZip(Asset|string $file, Builder $zip): Builder
     {
         if (is_string($file)) {
             return $zip->add($file);
