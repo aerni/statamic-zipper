@@ -3,6 +3,7 @@
 namespace Aerni\Zipper\Tests;
 
 use Statamic\Facades\Path;
+use Illuminate\Support\Str;
 use Statamic\Facades\Stache;
 
 trait PreventSavingStacheItemsToDisk
@@ -15,7 +16,7 @@ trait PreventSavingStacheItemsToDisk
 
         Stache::stores()->each(function ($store) {
             $dir = Path::tidy(__DIR__.'/__fixtures__');
-            $relative = str_after(str_after($store->directory(), $dir), '/');
+            $relative = Str::after(str::after($store->directory(), $dir), '/');
             $store->directory($this->fakeStacheDirectory.'/'.$relative);
         });
     }
