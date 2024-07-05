@@ -10,7 +10,7 @@ class ZipperTags extends Tags
 {
     protected static $handle = 'zip';
 
-    public function wildcard(): string
+    public function wildcard(): ?string
     {
         $value = $this->context->value($this->method);
 
@@ -19,6 +19,10 @@ class ZipperTags extends Tags
             ($value instanceof OrderedQueryBuilder) => $value->get()->all(), // Handle asset fields without `max_files`.
             default => [],
         };
+
+        if (empty($files)) {
+            return null;
+        }
 
         return Zipper::make($files)
             ->filename($this->params->get('filename'))
