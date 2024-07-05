@@ -12,10 +12,10 @@ use League\Flysystem\Local\LocalFilesystemAdapter;
 use Statamic\Contracts\Assets\Asset;
 use STS\ZipStream\Models\File;
 use STS\ZipStream\Builder;
-use STS\ZipStream\Facades\Zip as ZipStreamFacade;
+use STS\ZipStream\Facades\Zip;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class Zip
+class Zipper
 {
     protected Collection $files;
 
@@ -138,7 +138,7 @@ class Zip
      */
     protected function create(): Builder
     {
-        $zip = ZipStreamFacade::create("{$this->filename}.zip");
+        $zip = Zip::create("{$this->filename}.zip");
 
         $this->files->each(fn ($file) => $this->addFileToZip($file, $zip));
 

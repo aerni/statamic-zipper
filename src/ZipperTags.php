@@ -20,7 +20,7 @@ class ZipperTags extends Tags
             default => [],
         };
 
-        return Zip::make($files)
+        return Zipper::make($files)
             ->filename($this->params->get('filename'))
             ->expiry($this->params->get('expiry') ?? (int) config('zipper.expiry'))
             ->url();
