@@ -6,18 +6,11 @@ use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Storage;
 
 class ZipperStore
 {
-    protected Filesystem $store;
-
-    public function __construct()
+    public function __construct(protected Filesystem $store)
     {
-        $this->store = Storage::build([
-            'driver' => 'local',
-            'root' => storage_path('statamic/zipper'),
-        ]);
     }
 
     public function all(): Collection
