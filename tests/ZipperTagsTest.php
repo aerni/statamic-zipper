@@ -2,18 +2,19 @@
 
 namespace Aerni\Zipper\Tests;
 
-use Aerni\Zipper\Facades\ZipperStore;
-use Aerni\Zipper\ZipperTags;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
+use Illuminate\Support\Str;
+use Aerni\Zipper\ZipperTags;
+use Statamic\Assets\AssetContainer;
+use Illuminate\Support\Facades\Http;
+use Aerni\Zipper\Facades\ZipperStore;
 use Statamic\Fieldtypes\Assets\Assets;
+use Statamic\Facades\AssetContainer as AssetContainerFacade;
 use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
 
 class ZipperTagsTest extends TestCase
 {
-    use HasAssets;
     use PreventsSavingStacheItemsToDisk;
 
     private ZipperTags $tag;
@@ -22,17 +23,24 @@ class ZipperTagsTest extends TestCase
     {
         parent::setUp();
 
-        $this->makeAssets();
+        config(['filesystems.disks.test' => [
+            'driver' => 'local',
+            'root' => __DIR__.'/__fixtures__/assets',
+        ]]);
+
+        $this->container = (new AssetContainer)->handle('test')->disk('test');
+
+        AssetContainerFacade::shouldReceive('findByHandle')->andReturn($this->container);
+        AssetContainerFacade::shouldReceive('find')->andReturn($this->container);
+        AssetContainerFacade::shouldReceive('all')->andReturn(collect([$this->container]));
 
         $this->tag = app(ZipperTags::class);
-
-        Http::fake();
     }
 
     /** @test */
     public function can_handle_a_single_asset()
     {
-        $file = $this->assetContainer->files()->first();
+        $file = $this->container->files()->first();
 
         $fieldtype = (new Assets)->setField(new Field('assets', [
             'type' => 'assets',
@@ -60,7 +68,7 @@ class ZipperTagsTest extends TestCase
     /** @test */
     public function can_handle_multiple_assets()
     {
-        $files = $this->assetContainer->files()->all();
+        $files = $this->container->files()->all();
 
         $fieldtype = (new Assets)->setField(new Field('assets', [
             'type' => 'assets',
