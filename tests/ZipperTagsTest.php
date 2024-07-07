@@ -2,15 +2,14 @@
 
 namespace Aerni\Zipper\Tests;
 
+use Aerni\Zipper\Facades\ZipperStore;
+use Aerni\Zipper\ZipperTags;
+use Illuminate\Support\Str;
+use Statamic\Assets\AssetContainer;
+use Statamic\Facades\AssetContainer as AssetContainerFacade;
 use Statamic\Fields\Field;
 use Statamic\Fields\Value;
-use Illuminate\Support\Str;
-use Aerni\Zipper\ZipperTags;
-use Statamic\Assets\AssetContainer;
-use Illuminate\Support\Facades\Http;
-use Aerni\Zipper\Facades\ZipperStore;
 use Statamic\Fieldtypes\Assets\Assets;
-use Statamic\Facades\AssetContainer as AssetContainerFacade;
 use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
 
 class ZipperTagsTest extends TestCase
