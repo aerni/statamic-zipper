@@ -2,10 +2,11 @@
 
 namespace Aerni\Zipper;
 
-use Aerni\Zipper\Facades\Zipper;
-use Statamic\Assets\OrderedQueryBuilder;
-use Statamic\Contracts\Assets\Asset;
 use Statamic\Tags\Tags;
+use Illuminate\Support\Arr;
+use Statamic\Facades\Compare;
+use Aerni\Zipper\Facades\Zipper;
+use Statamic\Contracts\Assets\Asset;
 
 class ZipperTags extends Tags
 {
@@ -15,11 +16,13 @@ class ZipperTags extends Tags
     {
         $value = $this->context->value($this->method);
 
-        $files = match (true) {
-            ($value instanceof Asset) => [$value], // Handle asset fields with `max_files: 1`.
-            ($value instanceof OrderedQueryBuilder) => $value->get()->all(), // Handle asset fields without `max_files`.
-            default => [],
-        };
+        if (Compare::isQueryBuilder($value)) {
+            $value = $value->get()->all();
+        }
+
+        $files = collect(Arr::wrap($value))
+            ->whereInstanceOf(Asset::class)
+            ->all();
 
         if (empty($files)) {
             return null;
