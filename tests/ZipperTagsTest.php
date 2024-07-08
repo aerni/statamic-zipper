@@ -2,15 +2,10 @@
 
 namespace Aerni\Zipper\Tests;
 
-use Statamic\Assets\Asset;
-use Statamic\Fields\Field;
-use Statamic\Fields\Value;
-use Illuminate\Support\Str;
-use Aerni\Zipper\ZipperTags;
-use Statamic\Facades\Antlers;
 use Aerni\Zipper\Facades\ZipperStore;
-use Statamic\Fieldtypes\Assets\Assets;
-use Statamic\Assets\OrderedQueryBuilder;
+use Aerni\Zipper\ZipperTags;
+use Illuminate\Support\Str;
+use Statamic\Facades\Antlers;
 use Statamic\Facades\AssetContainer;
 use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
 

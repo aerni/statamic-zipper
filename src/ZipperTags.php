@@ -2,11 +2,11 @@
 
 namespace Aerni\Zipper;
 
-use Statamic\Tags\Tags;
-use Illuminate\Support\Arr;
-use Statamic\Facades\Compare;
 use Aerni\Zipper\Facades\Zipper;
+use Illuminate\Support\Arr;
 use Statamic\Contracts\Assets\Asset;
+use Statamic\Facades\Compare;
+use Statamic\Tags\Tags;
 
 class ZipperTags extends Tags
 {
