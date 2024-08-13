@@ -19,7 +19,7 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^10.0 || ^11.0",
-        "statamic/cms": "^5.0.1",
+        "statamic/cms": "^5.0",
         "stechstudio/laravel-zipstream": "^5.0"
     },
     "require-dev": {
@@ -63,6 +63,6 @@
             ]
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }
