@@ -17,12 +17,12 @@ class ZipperStore
             ->map(fn ($file) => $this->get($file));
     }
 
-    public function put(string $path, Zipper $zip): bool
+    public function put(string $path, Zip $zip): bool
     {
         return $this->store->put($path, Crypt::encrypt($zip));
     }
 
-    public function get(string $path): ?Zipper
+    public function get(string $path): ?Zip
     {
         try {
             return Crypt::decrypt($this->store->get($path));
