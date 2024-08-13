@@ -2,7 +2,7 @@
 
 namespace Aerni\Zipper;
 
-use Aerni\Zipper\Facades\Zipper;
+use Aerni\Zipper\Zipper;
 use Illuminate\Support\Arr;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Facades\Compare;

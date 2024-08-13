@@ -81,7 +81,7 @@ php please zipper:clean --scope=force
 You may also use this addon programmatically, as shown below.
 
 ```php
-use Aerni\Zipper\Facades\Zipper;
+use Aerni\Zipper\Zipper;
 
 // Prepare an array of Statamic assets, paths, or URLs.
 $files = [
