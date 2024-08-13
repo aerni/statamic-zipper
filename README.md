@@ -52,7 +52,7 @@ If you want to expire your links after a certain time, you can either set the ex
 
 ## Cleanup Old References
 
-Zipper saves an encrypted instance of the Zipper class every time it returns a URL, which is later retrieved and decrypted when a user downloads a zip. These reference files are stored in `storage/zipper/{id}`.
+Zipper saves an encrypted instance of the Zipper class every time it returns a URL. This class is later retrieved and decrypted when a user downloads a zip. These reference files are stored in `storage/zipper/{id}`.
 
 With time, the number of saved reference files will grow. To control this, Zipper provides a scheduled command that will delete old reference files daily. Just make sure that your Scheduler is running.
 
@@ -94,7 +94,7 @@ $files = [
 $zip = Zipper::make($files);
 
 // Set an optional filename. This defaults to the timestamp when the object was created.
-$zip->filename('obi-wan-kenobi')
+$zip->filename('obi-wan-kenobi');
 
 // Set an optional expiry time in minutes. This defaults to the expiry set in the config.
 $zip->expiry(60);
