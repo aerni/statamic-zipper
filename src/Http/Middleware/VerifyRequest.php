@@ -15,7 +15,7 @@ class VerifyRequest
         }
 
         if (! ZipperStore::exists($request->route()->parameter('id'))) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException;
         }
 
         return $next($request);
