@@ -10,21 +10,22 @@ use Illuminate\Support\Facades\URL;
 use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use Statamic\Contracts\Assets\Asset;
+use STS\ZipStream\Builder;
+use STS\ZipStream\Facades\Zip as ZipStreamZip;
 use STS\ZipStream\Models\File;
-use STS\ZipStream\ZipStream;
-use STS\ZipStream\ZipStreamFacade;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Zip
 {
     protected Collection $files;
+
     protected string $filename;
+
     protected int $expiry;
 
     public function __construct(array $files)
     {
-        $this
-            ->files($files)
+        $this->files($files)
             ->filename(time())
             ->expiry((int) config('zipper.expiry'));
     }
@@ -37,7 +38,7 @@ class Zip
     /**
      * Get and set the files to zip.
      */
-    public function files(array $files = null): Collection|self
+    public function files(?array $files = null): Collection|self
     {
         if (! func_get_args()) {
             return $this->files;
@@ -51,7 +52,7 @@ class Zip
     /**
      * Get and set the filename of the zip.
      */
-    public function filename(string $filename = null): string|self
+    public function filename(?string $filename = null): string|self
     {
         if (! func_get_args()) {
             return $this->filename;
@@ -66,7 +67,7 @@ class Zip
     /**
      * Get and set the expiry of the zip route.
      */
-    public function expiry(int $expiry = null): int|self
+    public function expiry(?int $expiry = null): int|self
     {
         if (! func_get_args()) {
             return $this->expiry;
@@ -86,7 +87,7 @@ class Zip
             return false;
         }
 
-        return ZipperStore::createdAt($this->id())
+        return ZipperStore::lastModified($this->id())
             ->addMinutes($this->expiry)
             ->isPast();
     }
@@ -126,7 +127,7 @@ class Zip
     /**
      * Create a new zip or download a previously cached zip.
      */
-    public function get(): ZipStream|StreamedResponse
+    public function get(): Builder|StreamedResponse
     {
         return $this->shouldCacheZip() ? $this->cache() : $this->create();
     }
@@ -134,9 +135,9 @@ class Zip
     /**
      * Create and stream a new zip.
      */
-    protected function create(): ZipStream
+    protected function create(): Builder
     {
-        $zip = ZipStreamFacade::create("{$this->filename}.zip");
+        $zip = ZipStreamZip::create("{$this->filename}.zip");
 
         $this->files->each(fn ($file) => $this->addFileToZip($file, $zip));
 
@@ -147,7 +148,7 @@ class Zip
      * Stream the zip while also caching it to disk for future requests.
      * This let's us download previously cached zips instead of creating new ones.
      */
-    protected function cache(): ZipStream|StreamedResponse
+    protected function cache(): Builder|StreamedResponse
     {
         $zip = $this->create();
         $filename = "{$zip->getFingerprint()}.zip";
@@ -177,7 +178,7 @@ class Zip
     /**
      * Add a file to the zip.
      */
-    protected function addFileToZip(Asset|string $file, ZipStream $zip): ZipStream
+    protected function addFileToZip(Asset|string $file, Builder $zip): Builder
     {
         if (is_string($file)) {
             return $zip->add($file);

@@ -3,6 +3,8 @@
 namespace Aerni\Zipper;
 
 use Aerni\Zipper\Commands\CleanReferenceFilesCommand;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\Storage;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
@@ -19,7 +21,17 @@ class ServiceProvider extends AddonServiceProvider
         ZipperTags::class,
     ];
 
-    protected function schedule($schedule)
+    public function register(): void
+    {
+        $this->app->singleton(ZipperStore::class, function () {
+            return new ZipperStore(Storage::build([
+                'driver' => 'local',
+                'root' => storage_path('statamic/zipper'),
+            ]));
+        });
+    }
+
+    protected function schedule(Schedule $schedule): void
     {
         $scope = config('zipper.cleanup', 'expired');
 
