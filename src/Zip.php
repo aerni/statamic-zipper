@@ -11,11 +11,11 @@ use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use Statamic\Contracts\Assets\Asset;
 use STS\ZipStream\Builder;
-use STS\ZipStream\Facades\Zip;
+use STS\ZipStream\Facades\Zip as ZipStreamZip;
 use STS\ZipStream\Models\File;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class Zipper
+class Zip
 {
     protected Collection $files;
 
@@ -137,7 +137,7 @@ class Zipper
      */
     protected function create(): Builder
     {
-        $zip = Zip::create("{$this->filename}.zip");
+        $zip = ZipStreamZip::create("{$this->filename}.zip");
 
         $this->files->each(fn ($file) => $this->addFileToZip($file, $zip));
 
