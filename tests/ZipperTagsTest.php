@@ -1,57 +1,42 @@
 <?php
 
-namespace Aerni\Zipper\Tests;
-
 use Aerni\Zipper\Facades\ZipperStore;
-use Aerni\Zipper\ZipperTags;
 use Illuminate\Support\Str;
 use Statamic\Facades\Antlers;
 use Statamic\Facades\AssetContainer;
-use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
 
-class ZipperTagsTest extends TestCase
-{
-    use PreventsSavingStacheItemsToDisk;
+uses(Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk::class);
 
-    private ZipperTags $tag;
+beforeEach(function () {
+    config(['filesystems.disks.test' => [
+        'driver' => 'local',
+        'root' => __DIR__.'/__fixtures__/assets',
+    ]]);
 
-    public function setUp(): void
-    {
-        parent::setUp();
+    $this->container = AssetContainer::make('test')->disk('test')->save();
+});
 
-        config(['filesystems.disks.test' => [
-            'driver' => 'local',
-            'root' => __DIR__.'/__fixtures__/assets',
-        ]]);
+test('can handle a single asset', function () {
+    $asset = $this->container->assets()->first();
 
-        $this->container = AssetContainer::make('test')->disk('test')->save();
-    }
 
-    /** @test */
-    public function can_handle_a_single_asset()
-    {
-        $asset = $this->container->assets()->first();
+    $url = Antlers::parse('{{ zip:assets }}', ['assets' => $asset], true);
 
-        $url = Antlers::parse('{{ zip:assets }}', ['assets' => $asset]);
+    $id = Str::before(basename($url), '?signature');
 
-        $id = Str::before(basename($url), '?signature');
+    $files = ZipperStore::get($id)->files();
 
-        $files = ZipperStore::get($id)->files();
+    expect($files->first()->resolvedPath())->toEqual($asset->resolvedPath());
+});
 
-        $this->assertEquals($asset->resolvedPath(), $files->first()->resolvedPath());
-    }
+test('can handle multiple assets', function () {
+    $assets = $this->container->queryAssets();
 
-    /** @test */
-    public function can_handle_multiple_assets()
-    {
-        $assets = $this->container->queryAssets();
+    $url = Antlers::parse('{{ zip:assets }}', ['assets' => $assets], true);
 
-        $url = Antlers::parse('{{ zip:assets }}', ['assets' => $assets]);
+    $id = Str::before(basename($url), '?signature');
 
-        $id = Str::before(basename($url), '?signature');
+    $files = ZipperStore::get($id)->files()->map(fn ($file) => $file->resolvedPath());
 
-        $files = ZipperStore::get($id)->files()->map(fn ($file) => $file->resolvedPath());
-
-        $assets->get()->each(fn ($asset) => $this->assertContains($asset->resolvedPath(), $files));
-    }
-}
+    $assets->get()->each(fn ($asset) => expect($files)->toContain($asset->resolvedPath()));
+});
