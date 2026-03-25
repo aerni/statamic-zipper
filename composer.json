@@ -17,15 +17,15 @@
         }
     ],
     "require": {
-        "php": "^8.2",
-        "laravel/framework": "^10.0 || ^11.0",
-        "statamic/cms": "^5.0",
+        "php": "^8.3",
+        "laravel/framework": "^12.0 || ^13.0",
+        "statamic/cms": "^6.0",
         "stechstudio/laravel-zipstream": "^5.0"
     },
     "require-dev": {
-        "nunomaduro/collision": "^7.0 || ^8.0",
-        "orchestra/testbench": "^8.0 || ^9.0",
-        "phpunit/phpunit": "^10.0"
+        "nunomaduro/collision": "^8.0 || ^9.0",
+        "orchestra/testbench": "^10.0 || ^11.0",
+        "phpunit/phpunit": "^11.0 || ^12.0"
     },
     "autoload": {
         "psr-4": {
