@@ -4,8 +4,9 @@ use Aerni\Zipper\Facades\ZipperStore;
 use Illuminate\Support\Str;
 use Statamic\Facades\Antlers;
 use Statamic\Facades\AssetContainer;
+use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
 
-uses(Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk::class);
+uses(PreventsSavingStacheItemsToDisk::class);
 
 beforeEach(function () {
     config(['filesystems.disks.test' => [
@@ -18,7 +19,6 @@ beforeEach(function () {
 
 test('can handle a single asset', function () {
     $asset = $this->container->assets()->first();
-
 
     $url = Antlers::parse('{{ zip:assets }}', ['assets' => $asset], true);
 
