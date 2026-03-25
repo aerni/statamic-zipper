@@ -17,15 +17,17 @@
         }
     ],
     "require": {
-        "php": "^8.2",
-        "laravel/framework": "^10.0 || ^11.0",
-        "statamic/cms": "^5.0",
+        "php": "^8.3",
+        "laravel/framework": "^12.0 || ^13.0",
+        "statamic/cms": "^6.0",
         "stechstudio/laravel-zipstream": "^5.0"
     },
     "require-dev": {
-        "nunomaduro/collision": "^7.0 || ^8.0",
-        "orchestra/testbench": "^8.0 || ^9.0",
-        "phpunit/phpunit": "^10.0"
+        "laravel/pint": "^1.27",
+        "orchestra/testbench": "^10.0 || ^11.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "spatie/laravel-ray": "^1.43"
     },
     "autoload": {
         "psr-4": {
@@ -35,22 +37,19 @@
     "autoload-dev": {
         "psr-4": {
             "Aerni\\Zipper\\Tests\\": "tests"
-        },
-        "classmap": [
-            "tests/TestCase.php"
-        ]
-    },
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
+        }
     },
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pixelfear/composer-dist-plugin": true
+            "pixelfear/composer-dist-plugin": true,
+            "pestphp/pest-plugin": true
         }
+    },
+    "scripts": {
+        "test": "./vendor/bin/pest"
     },
     "extra": {
         "statamic": {
