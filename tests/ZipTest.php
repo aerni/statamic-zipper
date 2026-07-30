@@ -2,10 +2,10 @@
 
 use Aerni\Zipper\Zip;
 use Illuminate\Support\Facades\Storage;
-use STS\ZipStream\Builder;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Facades\AssetContainer;
 use Statamic\Testing\Concerns\PreventsSavingStacheItemsToDisk;
+use STS\ZipStream\Builder;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 uses(PreventsSavingStacheItemsToDisk::class);
