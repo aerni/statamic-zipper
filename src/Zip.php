@@ -155,7 +155,7 @@ class Zip
         $disk = Storage::disk(config('zipper.disk'));
 
         if ($disk->exists($filename)) {
-            return $disk->download($filename, $zip->getName());
+            return $disk->download($filename, $zip->getOutputName());
         }
 
         $adapter = $disk->getAdapter();
